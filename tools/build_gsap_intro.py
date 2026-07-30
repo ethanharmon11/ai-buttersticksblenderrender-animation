@@ -1,14 +1,12 @@
 """Assemble gsap/intro.html — the Butter Sticks intro as a GSAP/SVG animation.
 
-v2 "true liquid":
-- fill-rule="evenodd" restored (letter counters render)
-- the gold pat becomes a LIQUID: pat slab + ball-coat + slow runnels merged
-  by a gooey filter into one molten mass; a dilated green copy underneath
-  generates the brand outline from the liquid itself (the outline melts too)
-- BSG stays in place, then liquefies (turbulence displacement) and dissolves
-- ~9.2s total; slow ooze over the ball, gentle drops into the pond
-Supports ?seek=<sec> for headless frame-grabs; prefers-reduced-motion jumps
-to the final lockup; click to replay.
+v3 "total meltdown":
+- No shape-pop: the REAL gold vector renders through the gooey filter from
+  frame one and is itself the thing that slumps (no stand-in rect).
+- The melt consumes everything: butter cascades over the ball, the ball
+  goes with it, and the whole golden mass slumps off the tee into the pond.
+- After the brown tide, the script wordmark rises alone, centered.
+~9.4s. ?seek=<sec> frame-grabs, prefers-reduced-motion, click to replay.
 """
 import json
 from pathlib import Path
@@ -23,7 +21,6 @@ GOLDEN = "#D9B64E"
 DEEP = "#BD9A42"
 GREEN = "#21522a"
 
-# Ball geometry in native badge coords (from extraction bboxes)
 BALL_CX, BALL_CY, BALL_R = 1742.1, 1104.6, 186
 
 
@@ -45,18 +42,17 @@ def wave(width=3600, x0=-1000, amp=30, wl=400, depth=1100):
 
 
 def molten_members(cls):
-    """The liquid's building blocks; gooey filter merges them into one mass.
-    Native badge coords. Same markup used for the gold body and green rim.
-    Fringe drips hang under the pat body and later slide down the ball."""
+    """The liquid: the REAL pat artwork + ball-coat + runnels, gooey-merged.
+    Same markup for the gold body and the green rim underneath."""
     runnels = ""
     for i, (x0, drift) in enumerate([(1604, -50), (1676, -20), (1744, 0),
                                      (1814, 22), (1882, 52)]):
-        runnels += (f'<ellipse class="{cls}Run{i}" cx="{x0}" cy="962" '
+        runnels += (f'<ellipse class="{cls}Run" cx="{x0}" cy="962" '
                     f'rx="{28 + (i % 3) * 5}" ry="34" data-drift="{drift}"/>\n')
     return f"""
-    <rect class="{cls}Pat" x="1548" y="758" width="378" height="180" rx="24"/>
+    <g class="{cls}PatArt">{paths("gold", keep_fill=False)}</g>
     <g clip-path="url(#coatClip)">
-      <circle class="{cls}Coat" cx="{BALL_CX}" cy="{BALL_CY}" r="{BALL_R + 15}"/>
+      <ellipse class="{cls}Coat" cx="{BALL_CX}" cy="{BALL_CY}" rx="{BALL_R + 15}" ry="{BALL_R + 15}"/>
     </g>
     {runnels}"""
 
@@ -105,7 +101,7 @@ html = f"""<!doctype html>
 
   <rect id="bg" width="1600" height="900" fill="{CREAM}"/>
 
-  <!-- gentle drops falling from the buttered ball into the pond -->
+  <!-- gentle drops falling from the cascading mass into the pond -->
   <g id="dripLayer" filter="url(#goo)" fill="{GOLDEN}" transform="translate(105,22.3) scale(0.4)">
     <ellipse class="drop" cx="1688" cy="1112" rx="26" ry="34"/>
     <ellipse class="drop" cx="1748" cy="1120" rx="30" ry="38"/>
@@ -120,30 +116,28 @@ html = f"""<!doctype html>
   <!-- the badge -->
   <g id="badgeMove">
     <g transform="translate(105,22.3) scale(0.4)">
-      {paths("sil")}
-      <!-- erases the emptied pat region (outline included) as butter departs -->
-      <g clip-path="url(#eraserClip)"><g id="eraser" fill="{CREAM}" stroke="{CREAM}" stroke-width="9">{paths("sil", keep_fill=False)}</g></g>
-      {paths("ball")}
-      {paths("dimples_cream")}
-      {paths("dimples_green")}
-      <!-- hides the ball's sparkle accents once butter coats the crown -->
-      <g id="hornCover" fill="{CREAM}" opacity="0">
-        <rect x="1872" y="876" width="92" height="104" rx="14"/>
-        <rect x="1522" y="886" width="84" height="90" rx="14"/>
+      <g id="staticA">
+        {paths("sil")}
+        <g clip-path="url(#eraserClip)"><g id="eraser" fill="{CREAM}" stroke="{CREAM}" stroke-width="9">{paths("sil", keep_fill=False)}</g></g>
+        {paths("ball")}
+        {paths("dimples_cream")}
+        {paths("dimples_green")}
+        <g id="hornCover" fill="{CREAM}" opacity="0">
+          <rect x="1872" y="876" width="92" height="104" rx="14"/>
+          <rect x="1522" y="886" width="84" height="90" rx="14"/>
+        </g>
       </g>
-      <!-- original crisp artwork; crossfades into the liquid sim -->
-      <g id="goldArt">{paths("gold")}</g>
-      <!-- the molten butter: green rim generated from the liquid, gold body -->
-      <g id="moltenRim" filter="url(#gooRim)" opacity="0">{molten_members("r")}</g>
-      <g id="moltenGold" filter="url(#goo)" fill="{GOLDEN}" opacity="0">{molten_members("g")}</g>
-      {paths("tee")}
+      <!-- the molten butter: real art in the goo from frame one -->
+      <g id="moltenRim" filter="url(#gooRim)">{molten_members("r")}</g>
+      <g id="moltenGold" filter="url(#goo)" fill="{GOLDEN}">{molten_members("g")}</g>
+      <g id="staticB">{paths("tee")}</g>
       <g id="bsg" filter="url(#lettersMelt)">{paths("bsg")}</g>
       <g id="speed">{paths("speed")}</g>
     </g>
   </g>
 
-  <!-- wordmark -->
-  <g id="wmMove" transform="translate(551,452.6) scale(0.39)" fill="{CREAM}">
+  <!-- wordmark: the sole hero of the final act, centered -->
+  <g id="wmMove" transform="translate(493.3,275) scale(0.48)" fill="{CREAM}">
     <g id="wmButter">{paths("wm_butter", keep_fill=False)}</g>
     <g id="wmSticks">{paths("wm_sticks", keep_fill=False)}</g>
     <g id="wmGolf">{paths("wm_golf", keep_fill=False, cls="golfLetter")}</g>
@@ -162,8 +156,7 @@ gsap.set(".drop", {{ autoAlpha: 0 }});
 gsap.set("#coatWave", {{ y: -185 }});
 gsap.set(["#pondBack", "#pondFront", "#tide"], {{ y: 920 }});
 gsap.set("svg", {{ scale: 1.07, transformOrigin: "50% 50%" }});
-// runnels start tucked under the pat's bottom edge
-gsap.set("[class*='Run']", {{ autoAlpha: 0 }});
+gsap.set(".rRun, .gRun", {{ autoAlpha: 0 }});
 
 // endless sideways drift on every liquid surface (wavelength = 400)
 gsap.to("#pondBack path",  {{ x: -400, duration: 2.1, ease: "none", repeat: -1 }});
@@ -180,77 +173,73 @@ tl.addLabel("in", 0.15)
   .to("#badgeMove", {{ scaleY: 0.965, scaleX: 1.03, duration: 0.25, ease: "sine.inOut" }}, 1.3)
   .to("#badgeMove", {{ scaleY: 1, scaleX: 1, duration: 0.3, ease: "sine.out" }}, 1.56);
 
-// ---- beat 2: the vector itself melts (1.6 - 4.6s) — slow ooze OVER the ball
+// ---- beat 2: the pat melts in place (1.6 - 3.4s)
 tl.addLabel("melt", 1.6)
-  // crisp art hands over to the liquid sim
-  .to(["#moltenRim", "#moltenGold"], {{ opacity: 1, duration: 0.4, ease: "sine.inOut" }}, "melt")
-  .to("#goldArt", {{ autoAlpha: 0, duration: 0.45, ease: "sine.inOut" }}, "melt+=0.1")
-  .to("#speed", {{ autoAlpha: 0, duration: 0.4 }}, "melt+=0.1")
-  // butter coats the ball's crown slowly, hugging the surface (stops ~45%)
-  .to("#coatWave", {{ y: 0, duration: 2.8, ease: "power1.inOut" }}, "melt+=0.5")
-  // the fringe drips wake up...
-  .to("[class*='Run']", {{ autoAlpha: 1, duration: 0.4, stagger: 0.15 }}, "melt+=0.3")
-  .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=1.0");
+  .to("#speed", {{ autoAlpha: 0, duration: 0.4 }}, "melt")
+  // the real pat art slumps downward into the flow
+  .to(".rPatArt, .gPatArt", {{ scaleY: 0.24, transformOrigin: "50% 100%",
+      duration: 1.8, ease: "power1.inOut" }}, "melt+=0.2")
+  .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.8, ease: "power1.inOut" }}, "melt+=0.2")
+  // butter coats the ball's crown, hugging the surface
+  .to("#coatWave", {{ y: 0, duration: 1.9, ease: "power1.inOut" }}, "melt+=0.4")
+  .to(".rRun, .gRun", {{ autoAlpha: 1, duration: 0.4, stagger: 0.15 }}, "melt+=0.3")
+  .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
+  // BSG stays put, liquefies, dissolves
+  .to("#dispMap", {{ attr: {{ scale: 42 }}, duration: 1.0, ease: "sine.in" }}, "melt+=0.8")
+  .to("#bsg", {{ autoAlpha: 0, duration: 0.7, ease: "sine.inOut" }}, "melt+=1.2");
 
-// ...and become runnels sliding slowly down the ball, spreading with its curve
-$$("[class*='Run']").forEach((r) => {{
+// runnels slide down the ball as the coat spreads
+$$(".rRun, .gRun").forEach((r) => {{
   const drift = parseFloat(r.dataset.drift);
-  const t0 = 0.9 + Math.abs(drift) / 80;
+  const t0 = 0.7 + Math.abs(drift) / 80;
   tl.to(r, {{ attr: {{ cy: 1235, cx: "+=" + drift }}, scaleY: 1.6,
-      transformOrigin: "50% 0%", duration: 2.4 + Math.abs(drift) / 55,
-      ease: "sine.in" }}, "melt+=" + t0)
-    .to(r, {{ autoAlpha: 0, duration: 0.4 }}, "melt+=" + (t0 + 2.3));
+      transformOrigin: "50% 0%", duration: 2.2 + Math.abs(drift) / 55,
+      ease: "sine.in" }}, "melt+=" + t0);
 }});
 
-// the pat slab empties from the top; its outline erases with it
-tl.to([".rPat", ".gPat"], {{ scaleY: 0.16, transformOrigin: "50% 100%",
-      duration: 1.8, ease: "power1.inOut" }}, "melt+=1.4")
-  .to([".rPat", ".gPat"], {{ autoAlpha: 0, duration: 0.4 }}, "melt+=3.1")
-  .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.8, ease: "power1.inOut" }}, "melt+=1.4")
-  // BSG stays put, liquefies, and dissolves into the flow
-  .to("#dispMap", {{ attr: {{ scale: 42 }}, duration: 1.1, ease: "sine.in" }}, "melt+=1.2")
-  .to("#bsg", {{ autoAlpha: 0, duration: 0.8, ease: "sine.inOut" }}, "melt+=1.65");
+// ---- beat 3: the ball goes with it (3.3 - 5.2s)
+tl.addLabel("consume", 3.3)
+  // the coat swallows the whole ball
+  .to("#coatWave", {{ y: 165, duration: 0.9, ease: "power1.inOut" }}, "consume")
+  // pond arrives to receive the cascade
+  .to("#pondBack", {{ y: 585, duration: 1.3, ease: "power1.inOut" }}, "consume+=0.1")
+  .to("#pondFront", {{ y: 606, duration: 1.3, ease: "power1.inOut" }}, "consume+=0.22")
+  // everything solid fades beneath the gold (invisible handoff)
+  .to(["#staticA", "#staticB"], {{ autoAlpha: 0, duration: 0.55, ease: "sine.inOut" }}, "consume+=0.55")
+  .to(".rPatArt, .gPatArt", {{ autoAlpha: 0, duration: 0.4 }}, "consume+=0.7")
+  // ...and the whole molten mass slumps off the tee into the river
+  .to(".rCoat, .gCoat", {{ attr: {{ cy: "+=300", ry: 96, rx: 238 }},
+      duration: 1.35, ease: "power1.in" }}, "consume+=0.75")
+  .to(".rRun, .gRun", {{ attr: {{ cy: "+=260" }}, autoAlpha: 0,
+      duration: 0.9, ease: "power1.in", stagger: (i) => (i % 5) * 0.06 }}, "consume+=0.8")
+  .to(["#moltenRim", "#moltenGold"], {{ autoAlpha: 0, duration: 0.45, ease: "sine.in" }}, "consume+=1.65");
 
-// ---- beat 3: pond fills like a glass (3.4 - 4.9s)
-tl.addLabel("pond", 3.4)
-  .to("#pondBack", {{ y: 585, duration: 1.45, ease: "power1.inOut" }}, "pond")
-  .to("#pondFront", {{ y: 606, duration: 1.45, ease: "power1.inOut" }}, "pond+=0.12");
-
-// gentle drops from the buttered ball into the pond
+// drops accompany the cascade
 $$(".drop").forEach((d, i) => {{
   [0, 1].forEach((w) => {{
-    const t0 = 4.0 + i * 0.4 + w * 1.05;
+    const t0 = 3.7 + i * 0.35 + w * 0.8;
     tl.fromTo(d, {{ autoAlpha: 1, y: 0, scaleY: 1, transformOrigin: "50% 0%" }},
-      {{ y: 385, scaleY: 2.0, duration: 1.15, ease: "power1.in", immediateRender: false }}, t0)
-      .to(d, {{ autoAlpha: 0, duration: 0.2 }}, t0 + 0.95);
+      {{ y: 385, scaleY: 2.0, duration: 1.05, ease: "power1.in", immediateRender: false }}, t0)
+      .to(d, {{ autoAlpha: 0, duration: 0.2 }}, t0 + 0.85);
   }});
 }});
 
-// ---- beat 4: the brown tide inversion (5.1 - 6.0s)
-tl.addLabel("tideUp", 5.1)
-  .to("#tide", {{ y: -85, duration: 0.9, ease: "power2.inOut" }}, "tideUp")
-  // the erased pat region fakes the background; follow the tide's color
-  .to(["#eraser", "#hornCover"], {{ fill: "{BROWN}", stroke: "{BROWN}", duration: 0.3, ease: "none" }}, "tideUp+=0.42");
+// ---- beat 4: the brown tide inversion (5.3 - 6.2s)
+tl.addLabel("tideUp", 5.3)
+  .to("#tide", {{ y: -85, duration: 0.9, ease: "power2.inOut" }}, "tideUp");
 
-// ---- beat 5: jelly settle + rise to lockup (6.0 - 6.9s)
-tl.addLabel("settle", 6.0)
-  .to("#badgeMove", {{ scaleY: 0.87, scaleX: 1.08, duration: 0.16, ease: "sine.in" }}, "settle")
-  .to("#badgeMove", {{ scaleY: 1.05, scaleX: 0.97, duration: 0.18, ease: "sine.inOut" }}, "settle+=0.16")
-  .to("#badgeMove", {{ scaleY: 1, scaleX: 1, duration: 0.24, ease: "sine.out" }}, "settle+=0.34")
-  .to("#badgeMove", {{ y: -117.2, duration: 0.72, ease: "power2.inOut" }}, "settle+=0.18");
+// ---- beat 5: wordmark rises alone, centered (6.5 - 8.3s)
+tl.addLabel("type", 6.5)
+  .to("#wmButter", {{ autoAlpha: 1, y: 0, duration: 0.65, ease: "power3.out" }}, "type")
+  .to("#wmSticks", {{ autoAlpha: 1, y: 0, duration: 0.65, ease: "power3.out" }}, "type+=0.26")
+  .to(".golfLetter", {{ autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out", stagger: 0.12 }}, "type+=0.66");
 
-// ---- beat 6: wordmark reveal (6.6 - 8.2s)
-tl.addLabel("type", 6.6)
-  .to("#wmButter", {{ autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" }}, "type")
-  .to("#wmSticks", {{ autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" }}, "type+=0.24")
-  .to(".golfLetter", {{ autoAlpha: 1, y: 0, duration: 0.45, ease: "power2.out", stagger: 0.12 }}, "type+=0.6");
-
-// ---- beat 7: breathing hold (8.4 - 9.2s)
-tl.to("#badgeMove", {{ scale: 1.012, duration: 0.38, ease: "sine.inOut" }}, 8.4)
-  .to("#badgeMove", {{ scale: 1.0, duration: 0.38, ease: "sine.inOut" }}, 8.78);
+// ---- beat 6: breathing hold (8.5 - 9.4s)
+tl.to("#wmMove", {{ scale: 1.012, transformOrigin: "50% 50%", duration: 0.4, ease: "sine.inOut" }}, 8.5)
+  .to("#wmMove", {{ scale: 1.0, duration: 0.4, ease: "sine.inOut" }}, 8.9);
 
 // slow camera push, whole film
-tl.to("svg", {{ scale: 1.0, duration: 9.2, ease: "sine.out" }}, 0);
+tl.to("svg", {{ scale: 1.0, duration: 9.4, ease: "sine.out" }}, 0);
 
 // reduced motion: land on the finished lockup immediately
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {{
