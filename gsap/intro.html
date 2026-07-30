@@ -14,12 +14,12 @@
 <div class="stage">
 <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-label="Butter Sticks Golf intro animation">
   <defs>
-    <filter id="goo" x="-30%" y="-30%" width="160%" height="160%">
+    <filter id="goo" filterUnits="userSpaceOnUse" x="1390" y="590" width="680" height="1100" color-interpolation-filters="sRGB">
       <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/>
       <feColorMatrix in="b" mode="matrix"
         values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8"/>
     </filter>
-    <filter id="gooRim" x="-30%" y="-30%" width="160%" height="160%">
+    <filter id="gooRim" filterUnits="userSpaceOnUse" x="1390" y="590" width="680" height="1100" color-interpolation-filters="sRGB">
       <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/>
       <feColorMatrix in="b" mode="matrix"
         values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="thresh"/>
@@ -27,7 +27,7 @@
       <feFlood flood-color="#21522a"/>
       <feComposite operator="in" in2="fat"/>
     </filter>
-    <filter id="lettersMelt" x="-40%" y="-40%" width="180%" height="180%">
+    <filter id="lettersMelt" filterUnits="userSpaceOnUse" x="1560" y="730" width="390" height="540" color-interpolation-filters="sRGB">
       <feTurbulence type="turbulence" baseFrequency="0.012 0.03" numOctaves="2" result="n"/>
       <feDisplacementMap id="dispMap" in="SourceGraphic" in2="n" scale="0"
         xChannelSelector="R" yChannelSelector="G" result="disp"/>
