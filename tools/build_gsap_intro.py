@@ -52,7 +52,7 @@ def molten_members(cls):
     return f"""
     <g class="{cls}PatArt">{paths("gold", keep_fill=False)}</g>
     <g clip-path="url(#coatClip)">
-      <ellipse class="{cls}Coat" cx="{BALL_CX}" cy="{BALL_CY}" rx="{BALL_R + 15}" ry="{BALL_R + 15}"/>
+      <ellipse class="{cls}Coat" cx="{BALL_CX}" cy="{BALL_CY}" rx="{BALL_R - 10}" ry="{BALL_R - 10}"/>
     </g>
     {runnels}"""
 
@@ -140,7 +140,7 @@ html = f"""<!doctype html>
   </g>
 
   <!-- wordmark: the sole hero of the final act, centered -->
-  <g id="wmMove" transform="translate(518.8,280.3) scale(0.44)" fill="{CREAM}">
+  <g id="wmMove" transform="translate(538.0,291.8) scale(0.41)" fill="{CREAM}">
     <g id="wmButter">{paths("wm_butter", keep_fill=False)}</g>
     <g id="wmSticks">{paths("wm_sticks", keep_fill=False)}</g>
     <g id="wmGolf">{paths("wm_golf", keep_fill=False, cls="golfLetter")}</g>
@@ -154,8 +154,8 @@ html = f"""<!doctype html>
 const $$ = (s) => gsap.utils.toArray(s);
 
 gsap.set("#badgeMove", {{ autoAlpha: 0, scale: 0.92, transformOrigin: "50% 50%" }});
-gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 85 }});
-gsap.set(".golfLetter", {{ autoAlpha: 0, y: 45 }});
+gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 40 }});
+gsap.set(".golfLetter", {{ autoAlpha: 0, y: 24 }});
 gsap.set(".drop", {{ autoAlpha: 0 }});
 gsap.set("#coatWave", {{ y: -185 }});
 gsap.set(["#pondBack", "#pondFront", "#tide"], {{ y: 920 }});
@@ -207,6 +207,7 @@ $$(".rRun, .gRun").forEach((r) => {{
 tl.addLabel("consume", 3.3)
   // the coat swallows the whole ball
   .to("#coatWave", {{ y: 165, duration: 0.9, ease: "power1.inOut" }}, "consume")
+  .to(".rCoat, .gCoat", {{ attr: {{ rx: 204, ry: 204 }}, duration: 0.6, ease: "sine.inOut" }}, "consume+=0.3")
   // pond arrives to receive the cascade
   .to("#pondBack", {{ y: 585, duration: 1.3, ease: "power1.inOut" }}, "consume+=0.1")
   .to("#pondFront", {{ y: 606, duration: 1.3, ease: "power1.inOut" }}, "consume+=0.22")
@@ -237,16 +238,15 @@ tl.addLabel("tideUp", 5.3)
 
 // ---- beat 5: wordmark rises alone, centered (6.5 - 8.3s)
 tl.addLabel("type", 6.7)
-  .to("#wmButter", {{ autoAlpha: 1, y: 0, duration: 1.35, ease: "sine.out" }}, "type")
-  .to("#wmSticks", {{ autoAlpha: 1, y: 0, duration: 1.35, ease: "sine.out" }}, "type+=0.18")
-  .to(".golfLetter", {{ autoAlpha: 1, y: 0, duration: 1.0, ease: "sine.out", stagger: 0.09 }}, "type+=0.5");
+  .to("#wmButter", {{ autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }}, "type")
+  .to("#wmSticks", {{ autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }}, "type+=0.15")
+  .to(".golfLetter", {{ autoAlpha: 1, y: 0, duration: 1.2, ease: "sine.out", stagger: 0.1 }}, "type+=0.45");
 
 // ---- beat 6: breathing hold (8.5 - 9.4s)
-tl.to("#wmMove", {{ scale: 1.007, transformOrigin: "50% 50%", duration: 0.5, ease: "sine.inOut" }}, 8.8)
-  .to("#wmMove", {{ scale: 1.0, duration: 0.5, ease: "sine.inOut" }}, 9.3);
+tl.to({{}}, {{ duration: 0.1 }}, 9.7);  // quiet hold to the end
 
 // slow camera push, whole film
-tl.to("svg", {{ scale: 1.0, duration: 9.8, ease: "sine.out" }}, 0);
+tl.to("svg", {{ scale: 1.0, duration: 5.5, ease: "sine.out" }}, 0);
 
 // reduced motion: land on the finished lockup immediately
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {{
