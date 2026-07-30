@@ -191,12 +191,12 @@ tl.addLabel("melt", 1.6)
   // the outline melts into the mass: rim thins as everything liquefies
   .to("#rimDilate", {{ attr: {{ radius: 3 }}, duration: 2.6, ease: "sine.inOut" }}, "melt+=0.3")
   // the real pat art slumps downward into the flow
-  .to(".rPatArt, .gPatArt", {{ scaleY: 0.24, transformOrigin: "50% 100%",
+  .to(".rPatArt, .gPatArt", {{ scaleY: 0.52, transformOrigin: "50% 100%",
       duration: 1.8, ease: "power1.inOut" }}, "melt+=0.2")
   .to(".rPatArt", {{ opacity: 0, duration: 1.6, ease: "sine.in" }}, "melt+=0.5")
   .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.6, ease: "power1.out" }}, "melt+=0.05")
   // butter coats the ball's crown, hugging the surface
-  .to("#coatWave", {{ y: 165, duration: 2.5, ease: "power1.inOut" }}, "melt+=0.4")
+  .to("#coatWave", {{ y: 165, duration: 2.2, ease: "power1.inOut" }}, "melt+=0.25")
   .to(".rRun, .gRun", {{ autoAlpha: 1, duration: 0.4, stagger: 0.15 }}, "melt+=0.3")
   .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
   // BSG rides the slumping butter down, liquefying as it goes
@@ -223,18 +223,18 @@ tl.addLabel("consume", 3.3)
   .to("#pondBack", {{ y: 585, duration: 1.3, ease: "power1.inOut" }}, "consume+=0.1")
   .to("#pondFront", {{ y: 606, duration: 1.3, ease: "power1.inOut" }}, "consume+=0.22")
   // everything solid fades beneath the gold (invisible handoff)
-  .to("#staticA", {{ autoAlpha: 0, duration: 0.38, ease: "sine.inOut" }}, "consume+=0.78")
-  .to(".rPatArt, .gPatArt", {{ autoAlpha: 0, duration: 0.4 }}, "consume+=0.7")
+  .to("#staticA", {{ autoAlpha: 0, duration: 0.22, ease: "sine.inOut" }}, "consume+=0.72")
+  .to(".rPatArt, .gPatArt", {{ autoAlpha: 0, duration: 0.4 }}, "consume+=0.8")
   // ...and the whole molten mass slumps off the tee into the river
   .to("#coatWave", {{ y: 620, duration: 0.8, ease: "power1.in" }}, "consume+=0.6")
   .to(".rTeeCup, .gTeeCup", {{ autoAlpha: 1, duration: 0.25, ease: "sine.out" }}, "consume+=0.45")
   .to(".rTeeStem, .gTeeStem", {{ autoAlpha: 1, duration: 0.18 }}, "consume+=0.5")
-  .to(".rTeeStem, .gTeeStem", {{ scaleY: 1, duration: 0.55, ease: "power1.in" }}, "consume+=0.52")
-  .to(".rCoat, .gCoat", {{ attr: {{ cy: "+=300", ry: 96, rx: 238 }},
-      duration: 1.35, ease: "power1.in" }}, "consume+=0.75")
+  .to(".rTeeStem, .gTeeStem", {{ scaleY: 1, duration: 0.42, ease: "power1.in" }}, "consume+=0.52")
+  .to(".rCoat, .gCoat", {{ attr: {{ cy: "+=360", ry: 96, rx: 238 }},
+      duration: 1.35, ease: "power1.in" }}, "consume+=0.85")
   .to(".rRun, .gRun", {{ attr: {{ cy: "+=260" }}, autoAlpha: 0,
-      duration: 0.9, ease: "power1.in", stagger: (i) => (i % 5) * 0.06 }}, "consume+=0.8")
-  .to(["#moltenRim", "#moltenGold"], {{ autoAlpha: 0, duration: 0.45, ease: "sine.in" }}, "consume+=1.8");
+      duration: 0.9, ease: "power1.in", stagger: (i) => (i % 5) * 0.06 }}, "consume+=0.9")
+  .to(["#moltenRim", "#moltenGold"], {{ autoAlpha: 0, duration: 0.28, ease: "sine.in" }}, "consume+=1.9");
 
 // drops accompany the cascade
 $$(".drop").forEach((d, i) => {{
@@ -242,7 +242,7 @@ $$(".drop").forEach((d, i) => {{
     const t0 = 3.7 + i * 0.35 + w * 0.8;
     tl.fromTo(d, {{ autoAlpha: 1, y: 0, scaleY: 1, transformOrigin: "50% 0%" }},
       {{ y: 385, scaleY: 2.0, duration: 1.05, ease: "power1.in", immediateRender: false }}, t0)
-      .to(d, {{ autoAlpha: 0, duration: 0.2 }}, t0 + 0.85);
+      .to(d, {{ autoAlpha: 0, duration: 0.12 }}, t0 + 0.9);
   }});
 }});
 
