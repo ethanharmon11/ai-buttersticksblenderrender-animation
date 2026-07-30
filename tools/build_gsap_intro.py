@@ -1,14 +1,12 @@
 """Assemble gsap/intro.html — the Butter Sticks intro as a GSAP/SVG animation.
 
-v5 "Seedance-matched glaze":
-Motion copied from reference/melt1.mp4 (Seedance 2.0, 8s): the pat melts
-into a cap conforming to the ball's crown (BSG riding it, warping, alive
-deep into the melt); butter runs down the ball in discrete STREAMS with
-dimples visible between them (clipped to the ball's silhouette so they
-hug the sphere); streams continue down the tee; droplets detach
-throughout. The glazed ball stays whole, then the entire glazed object
-sinks into the pond. ~13s.
-?seek=<sec> frame-grabs, prefers-reduced-motion, click to replay.
+v3 "total meltdown":
+- No shape-pop: the REAL gold vector renders through the gooey filter from
+  frame one and is itself the thing that slumps (no stand-in rect).
+- The melt consumes everything: butter cascades over the ball, the ball
+  goes with it, and the whole golden mass slumps off the tee into the pond.
+- After the brown tide, the script wordmark rises alone, centered.
+~9.4s. ?seek=<sec> frame-grabs, prefers-reduced-motion, click to replay.
 """
 import json
 from pathlib import Path
@@ -79,34 +77,23 @@ def _drip_tips():
 DRIP_TIPS = _drip_tips()
 print("painted drip tips:", [(round(t[0]), round(t[1]), t[2]) for t in DRIP_TIPS])
 
-# Ball streams measured from the Seedance reference mid-melt frames:
-# (center offset, width, final length, start order)
-STREAMS = [(-110, 30, 330, 3), (-50, 42, 400, 0), (8, 34, 360, 1),
-           (62, 38, 395, 2), (118, 26, 300, 4)]
-
 
 def molten_members(cls):
-    """The liquid, Seedance-matched: pat art + conforming crown cap +
-    ball streams (clipped to the sphere) + tee streams + resumed drips.
-    Same markup for the gold body and the green rim underneath."""
+    """The liquid: the REAL pat artwork + ball-coat + runnels, gooey-merged.
+    Runnels spawn buried inside the artwork's painted drip tips and resume
+    their frozen fall. Same markup for the gold body and the green rim."""
     runnels = ""
     for i, (tx, ty, w) in enumerate(DRIP_TIPS):
         drift = max(-40, min(40, (tx - 1742) * 0.35))
-        runnels += (f'<ellipse class="{cls}Run" cx="{tx:.0f}" cy="{ty - 26:.0f}" '
-                    f'rx="{w / 2 - 2:.0f}" ry="16" data-drift="{drift:.0f}" data-i="{i}"/>\n')
-    streams = ""
-    for j, (dx, w, ln, order) in enumerate(STREAMS):
-        streams += (f'<rect class="{cls}Stream" x="{BALL_CX + dx - w / 2:.0f}" y="892" '
-                    f'width="{w}" height="{ln}" rx="{w / 2}" data-order="{order}"/>\n')
+        runnels += (f'<ellipse class="{cls}Run" cx="{tx:.0f}" cy="{ty - 30:.0f}" '
+                    f'rx="{w / 2 + 7:.0f}" ry="20" data-drift="{drift:.0f}" data-i="{i}"/>\n')
     return f"""
     <g class="{cls}PatArt">{paths("gold", keep_fill=False)}</g>
-    <g clip-path="url(#ballClip)">
-      <ellipse class="{cls}Cap" cx="{BALL_CX}" cy="938" rx="168" ry="96"/>
-      {streams}
+    <ellipse class="{cls}TeeCup" cx="1741" cy="1190" rx="62" ry="24"/>
+    <rect class="{cls}TeeStem" x="1717" y="1195" width="49" height="202" rx="22"/>
+    <g clip-path="url(#coatClip)">
+      <ellipse class="{cls}Coat" cx="{BALL_CX}" cy="{BALL_CY}" rx="{BALL_R + 4}" ry="{BALL_R + 4}"/>
     </g>
-    <ellipse class="{cls}TeeCup" cx="1741" cy="1192" rx="54" ry="20"/>
-    <rect class="{cls}TeeStreamA" x="1714" y="1206" width="16" height="176" rx="8"/>
-    <rect class="{cls}TeeStreamB" x="1744" y="1206" width="13" height="150" rx="6"/>
     {runnels}"""
 
 
@@ -145,8 +132,8 @@ html = f"""<!doctype html>
         xChannelSelector="R" yChannelSelector="G" result="disp"/>
       <feGaussianBlur id="bsgBlur" in="disp" stdDeviation="0 0"/>
     </filter>
-    <clipPath id="ballClip">
-      <circle cx="{BALL_CX}" cy="{BALL_CY}" r="{BALL_R + 2}"/>
+    <clipPath id="coatClip">
+      <path id="coatWave" d="M1520 400 H1968 V1150 Q1938 1132 1908 1140 Q1872 1150 1846 1118 Q1812 1082 1776 1092 Q1754 1098 1744 1076 Q1716 1084 1688 1102 Q1656 1124 1620 1112 Q1584 1100 1560 1130 Q1540 1148 1520 1132 Z"/>
     </clipPath>
     <mask id="eraserMask">
       <rect id="eraserRect" x="1520" y="740" width="440" height="0" fill="white"/>
@@ -162,11 +149,11 @@ html = f"""<!doctype html>
 
   <rect id="bg" width="1600" height="900" fill="{CREAM}"/>
 
-  <!-- droplets detaching from the glaze into the pond -->
+  <!-- gentle drops falling from the cascading mass into the pond -->
   <g id="dripLayer" filter="url(#goo)" fill="{GOLDEN}" transform="translate(105,22.3) scale(0.4)">
-    <ellipse class="drop" cx="1688" cy="1150" rx="22" ry="30"/>
-    <ellipse class="drop" cx="1748" cy="1240" rx="26" ry="34"/>
-    <ellipse class="drop" cx="1802" cy="1170" rx="20" ry="28"/>
+    <ellipse class="drop" cx="1688" cy="1112" rx="26" ry="34"/>
+    <ellipse class="drop" cx="1748" cy="1120" rx="30" ry="38"/>
+    <ellipse class="drop" cx="1806" cy="1110" rx="24" ry="32"/>
   </g>
 
   <!-- liquids -->
@@ -189,6 +176,7 @@ html = f"""<!doctype html>
           <rect x="1522" y="886" width="84" height="90" rx="14"/>
         </g>
       </g>
+      <!-- the molten butter: real art in the goo from frame one -->
       <g id="moltenRim" filter="url(#gooRim)">{molten_members("r")}</g>
       <g id="moltenGold" filter="url(#goo)" fill="{GOLDEN}">{molten_members("g")}</g>
       <g id="bsg" filter="url(#lettersMelt)">{paths("bsg", cls="bsgL")}</g>
@@ -214,13 +202,12 @@ gsap.set("#badgeMove", {{ autoAlpha: 0, scale: 0.92, transformOrigin: "50% 50%" 
 gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 40 }});
 gsap.set(".golfLetter", {{ autoAlpha: 0, y: 24 }});
 gsap.set(".drop", {{ autoAlpha: 0 }});
+gsap.set("#coatWave", {{ y: -300 }});
 gsap.set(["#pondBack", "#pondFront", "#tide"], {{ y: 920 }});
 gsap.set("svg", {{ scale: 1.07, transformOrigin: "50% 50%" }});
 gsap.set(".rRun, .gRun", {{ autoAlpha: 0 }});
-gsap.set(".rCap, .gCap", {{ autoAlpha: 0, scale: 0.55, transformOrigin: "50% 20%" }});
-gsap.set(".rStream, .gStream", {{ autoAlpha: 0, scaleY: 0.05, transformOrigin: "50% 0%" }});
-gsap.set(".rTeeCup, .gTeeCup, .rTeeStreamA, .gTeeStreamA, .rTeeStreamB, .gTeeStreamB", {{ autoAlpha: 0 }});
-gsap.set(".rTeeStreamA, .gTeeStreamA, .rTeeStreamB, .gTeeStreamB", {{ scaleY: 0.08, transformOrigin: "50% 0%" }});
+gsap.set(".rTeeCup, .gTeeCup, .rTeeStem, .gTeeStem", {{ autoAlpha: 0 }});
+gsap.set(".rTeeStem, .gTeeStem", {{ scaleY: 0.12, transformOrigin: "50% 0%" }});
 
 // endless sideways drift on every liquid surface (wavelength = 400)
 gsap.to("#pondBack path",  {{ x: -400, duration: 2.1, ease: "none", repeat: -1 }});
@@ -229,100 +216,95 @@ gsap.to("#tide path",      {{ x: -400, duration: 2.4, ease: "none", repeat: -1 }
 
 const tl = gsap.timeline({{ defaults: {{ ease: "power2.out" }} }});
 
-// ---- beat 1: arrival on cream (0 - 1.5s)
+// ---- beat 1: arrival on cream (0 - 1.4s)
 tl.addLabel("in", 0.15)
   .to("#badgeMove", {{ autoAlpha: 1, duration: 0.7, ease: "sine.out" }}, "in")
   .to("#badgeMove", {{ scale: 1.0, duration: 1.2, ease: "sine.out" }}, "in");
 
-// ---- beat 2: the frozen melt resumes (1.6 - 3.4s)  [ref: 0.0 - 1.8s]
+// ---- beat 2: the pat melts in place (1.6 - 3.4s)
 tl.addLabel("melt", 1.6)
   .to("#speed", {{ autoAlpha: 0, duration: 0.4 }}, "melt")
-  .to("#rimDilate", {{ attr: {{ radius: 4 }}, duration: 2.6, ease: "sine.inOut" }}, "melt+=0.4")
-  .to(".gRun", {{ autoAlpha: 1, duration: 0.2, stagger: 0.1 }}, "melt+=0.05");
+  // the outline melts into the mass: rim thins as everything liquefies
+  .to("#rimDilate", {{ attr: {{ radius: 3 }}, duration: 2.6, ease: "sine.inOut" }}, "melt+=0.3")
+  // the real pat art slumps downward into the flow
+  .to(".rPatArt, .gPatArt", {{ scaleY: 0.52, scaleX: 0.56, transformOrigin: "50% 100%",
+      duration: 1.7, ease: "power1.inOut" }}, "melt+=0.7")
+  .to(".rPatArt", {{ opacity: 0, duration: 1.5, ease: "sine.in" }}, "melt+=0.9")
+  .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.6, ease: "power1.out" }}, "melt+=0.55")
+  // butter coats the ball's crown, hugging the surface
+  .to("#coatWave", {{ y: 165, duration: 2.1, ease: "power1.inOut" }}, "melt+=0.55")
+  .to(".gRun", {{ autoAlpha: 1, duration: 0.2, stagger: 0.1 }}, "melt+=0.05")
+  .to("#coatWave", {{ x: 14, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 5 }}, "melt+=0.3")
+  .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
+  // BSG rides the slumping butter down, liquefying as it goes
+  .to(".bsgL", {{ y: 215, scaleY: 1.55, transformOrigin: "50% 0%", duration: 1.7,
+      ease: "power1.inOut", stagger: 0.08 }}, "melt+=0.7")
+  .to(".bsgL", {{ fill: "{GOLDEN}", duration: 0.9, ease: "sine.in", stagger: 0.08 }}, "melt+=0.95")
+  .to(".bsgL", {{ autoAlpha: 0, duration: 0.7, ease: "sine.inOut", stagger: 0.08 }}, "melt+=1.6")
+  .to("#dispMap", {{ attr: {{ scale: 26 }}, duration: 1.3, ease: "sine.in" }}, "melt+=0.5")
+  .to("#bsgBlur", {{ attr: {{ stdDeviation: "0 19" }}, duration: 1.2, ease: "sine.in" }}, "melt+=0.7");
 
+// runnels slide down the ball as the coat spreads
 $$(".rRun, .gRun").forEach((r) => {{
   const drift = parseFloat(r.dataset.drift);
   const t0 = 0.12 + parseInt(r.dataset.i, 10) * 0.22;   // longest painted drip resumes first
+  // phase 1: the painted drip visibly lengthens from its tip...
   if (r.classList.contains("rRun")) {{
     tl.to(r, {{ autoAlpha: 1, duration: 0.45, ease: "sine.in" }}, "melt+=" + (t0 + 0.2));
   }}
-  tl.to(r, {{ attr: {{ ry: 44, cy: "+=40" }}, scaleX: 0.78, transformOrigin: "50% 50%", duration: 0.8, ease: "power1.in" }}, "melt+=" + t0)
+  tl.to(r, {{ attr: {{ ry: 44, cy: "+=40" }}, scaleX: 0.78, transformOrigin: "50% 50%", duration: 0.7, ease: "power1.in" }}, "melt+=" + t0)
+  // ...phase 2: it lets go and runs down the ball
     .to(r, {{ attr: {{ cy: 1235, cx: "+=" + drift }}, scaleY: 1.3, scaleX: 0.68,
-      transformOrigin: "50% 0%", duration: 1.9 + Math.abs(drift) / 55,
-      ease: "sine.in" }}, "melt+=" + (t0 + 0.8));
+      transformOrigin: "50% 0%", duration: 1.6 + Math.abs(drift) / 55,
+      ease: "sine.in" }}, "melt+=" + (t0 + 0.7));
 }});
 
-// ---- beat 3: the pat becomes a cap conforming to the crown (2.3 - 4.4s)  [ref: 1.5 - 3.0s]
-tl.to(".rPatArt, .gPatArt", {{ scaleY: 0.34, scaleX: 0.60, transformOrigin: "50% 100%",
-      duration: 2.0, ease: "power1.inOut" }}, "melt+=0.7")
-  .to(".rPatArt", {{ opacity: 0, duration: 1.7, ease: "sine.in" }}, "melt+=1.0")
-  .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.9, ease: "power1.out" }}, "melt+=0.6")
-  .to(".rCap, .gCap", {{ autoAlpha: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
-  .to(".rCap, .gCap", {{ scale: 1.0, duration: 1.9, ease: "power1.inOut" }}, "melt+=0.9")
-  .to(".rCap, .gCap", {{ attr: {{ cy: "+=26", ry: 108 }}, duration: 2.6, ease: "sine.inOut" }}, "melt+=3.0")
-  .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=1.2")
-  // BSG rides the cap, warps with its curve, stays alive deep into the melt
-  .to(".bsgL", {{ y: 132, scaleY: 1.18, transformOrigin: "50% 0%", duration: 2.0,
-      ease: "power1.inOut", stagger: 0.08 }}, "melt+=0.7")
-  .to(".bsgL", {{ rotation: (i) => [-6, 0, 6, 2][i % 4], duration: 2.0, ease: "sine.inOut", stagger: 0.08 }}, "melt+=0.9")
-  .to(".bsgL", {{ fill: "{GOLDEN}", duration: 1.2, ease: "sine.in", stagger: 0.1 }}, "melt+=2.6")
-  .to(".bsgL", {{ autoAlpha: 0, duration: 0.9, ease: "sine.inOut", stagger: 0.1 }}, "melt+=3.8")
-  .to("#dispMap", {{ attr: {{ scale: 24 }}, duration: 1.6, ease: "sine.in" }}, "melt+=2.2")
-  .to("#bsgBlur", {{ attr: {{ stdDeviation: "0 16" }}, duration: 1.4, ease: "sine.in" }}, "melt+=2.6");
+// ---- beat 3: the ball goes with it (3.3 - 5.2s)
+tl.addLabel("consume", 3.3)
 
-// ---- beat 4: streams glaze the ball, dimples peeking through (3.2 - 7.0s)  [ref: 2.0 - 6.5s]
-tl.addLabel("glaze", 3.2);
-$$(".rStream, .gStream").forEach((st) => {{
-  const order = parseInt(st.dataset.order, 10);
-  const t0 = order * 0.45;
-  tl.to(st, {{ autoAlpha: 1, duration: 0.3, ease: "sine.in" }}, "glaze+=" + t0)
-    .to(st, {{ scaleY: 1.0, duration: 2.0 + order * 0.15, ease: "power1.inOut" }}, "glaze+=" + (t0 + 0.1));
-}});
+  // pond arrives to receive the cascade
+  .to("#pondBack", {{ y: 585, duration: 1.3, ease: "power1.inOut" }}, "consume+=0.1")
+  .to("#pondFront", {{ y: 606, duration: 1.3, ease: "power1.inOut" }}, "consume+=0.22")
+  // everything solid fades beneath the gold (invisible handoff)
+  .to("#staticA", {{ autoAlpha: 0, duration: 0.22, ease: "sine.inOut" }}, "consume+=0.72")
+  .to(".rPatArt, .gPatArt", {{ autoAlpha: 0, duration: 0.4 }}, "consume+=0.8")
+  // ...and the whole molten mass slumps off the tee into the river
+  .to("#coatWave", {{ y: 620, duration: 0.8, ease: "power1.in" }}, "consume+=0.6")
+  .to(".rTeeCup, .gTeeCup", {{ autoAlpha: 1, duration: 0.25, ease: "sine.out" }}, "consume+=0.45")
+  .to(".rTeeStem, .gTeeStem", {{ autoAlpha: 1, duration: 0.18 }}, "consume+=0.5")
+  .to(".rTeeStem, .gTeeStem", {{ scaleY: 1, duration: 0.42, ease: "power1.in" }}, "consume+=0.52")
+  .to(".rCoat, .gCoat", {{ attr: {{ cy: "+=360", ry: 96, rx: 238 }},
+      duration: 1.35, ease: "power1.in" }}, "consume+=0.85")
+  .to(".rRun, .gRun", {{ attr: {{ cy: "+=260" }}, autoAlpha: 0,
+      duration: 0.9, ease: "power1.in", stagger: (i) => (i % 5) * 0.06 }}, "consume+=0.9")
+  .to(["#moltenRim", "#moltenGold"], {{ autoAlpha: 0, duration: 0.28, ease: "sine.in" }}, "consume+=1.9");
 
-// streams keep swelling gently — coverage grows but never seals the dimples
-tl.to(".rStream, .gStream", {{ scaleX: 1.28, transformOrigin: "50% 50%", duration: 1.9,
-      ease: "sine.inOut" }}, "glaze+=2.7")
-  // butter reaches the tee and runs down it
-  .to(".rTeeCup, .gTeeCup", {{ autoAlpha: 1, duration: 0.35, ease: "sine.out" }}, "glaze+=2.4")
-  .to(".rTeeStreamA, .gTeeStreamA", {{ autoAlpha: 1, duration: 0.2 }}, "glaze+=2.7")
-  .to(".rTeeStreamA, .gTeeStreamA", {{ scaleY: 1, duration: 1.3, ease: "power1.in" }}, "glaze+=2.75")
-  .to(".rTeeStreamB, .gTeeStreamB", {{ autoAlpha: 1, duration: 0.2 }}, "glaze+=3.15")
-  .to(".rTeeStreamB, .gTeeStreamB", {{ scaleY: 1, duration: 1.2, ease: "power1.in" }}, "glaze+=3.2")
-  // pond rises to receive the drips
-  .to("#pondBack", {{ y: 585, duration: 1.45, ease: "power1.inOut" }}, "glaze+=3.4")
-  .to("#pondFront", {{ y: 606, duration: 1.45, ease: "power1.inOut" }}, "glaze+=3.52");
-
-// droplets detach from the glaze throughout  [ref: continuous]
+// drops accompany the cascade
 $$(".drop").forEach((d, i) => {{
-  [0, 1, 2].forEach((w) => {{
-    const t0 = 4.0 + i * 0.45 + w * 1.25;
+  [0, 1].forEach((w) => {{
+    const t0 = 3.7 + i * 0.35 + w * 0.8;
     tl.fromTo(d, {{ autoAlpha: 1, y: 0, scaleY: 1, transformOrigin: "50% 0%" }},
-      {{ y: 385, scaleY: 1.9, duration: 1.15, ease: "power1.in", immediateRender: false }}, t0)
-      .to(d, {{ autoAlpha: 0, duration: 0.12 }}, t0 + 1.0);
+      {{ y: 385, scaleY: 2.0, duration: 1.05, ease: "power1.in", immediateRender: false }}, t0)
+      .to(d, {{ autoAlpha: 0, duration: 0.12 }}, t0 + 0.9);
   }});
 }});
 
-// ---- beat 5: the whole glazed object sinks into the river (8.0 - 9.4s)
-tl.addLabel("sink", 8.0)
-  .to("#badgeMove", {{ y: 660, duration: 1.35, ease: "power1.in" }}, "sink")
-  .to("#badgeMove", {{ autoAlpha: 0, duration: 0.32, ease: "sine.in" }}, "sink+=1.0");
-
-// ---- beat 6: the brown tide inversion (9.6 - 10.5s)
-tl.addLabel("tideUp", 9.6)
+// ---- beat 4: the brown tide inversion (5.3 - 6.2s)
+tl.addLabel("tideUp", 5.3)
   .to("#tide", {{ y: -85, duration: 0.9, ease: "power2.inOut" }}, "tideUp")
   .to("body", {{ backgroundColor: "{BROWN}", duration: 0.7, ease: "sine.inOut" }}, "tideUp+=0.25");
 
-// ---- beat 7: wordmark rises alone, centered (10.9 - 12.6s)
-tl.addLabel("type", 10.9)
+// ---- beat 5: wordmark rises alone, centered (6.5 - 8.3s)
+tl.addLabel("type", 6.7)
   .to("#wmButter", {{ autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }}, "type")
   .to("#wmSticks", {{ autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }}, "type+=0.15")
   .to(".golfLetter", {{ autoAlpha: 1, y: 0, duration: 1.2, ease: "sine.out", stagger: 0.1 }}, "type+=0.45");
 
-// quiet hold to the end
-tl.to({{}}, {{ duration: 0.1 }}, 13.0);
+// ---- beat 6: breathing hold (8.5 - 9.4s)
+tl.to({{}}, {{ duration: 0.1 }}, 9.7);  // quiet hold to the end
 
-// slow camera push through the melt
-tl.to("svg", {{ scale: 1.0, duration: 7.5, ease: "sine.out" }}, 0);
+// slow camera push, whole film
+tl.to("svg", {{ scale: 1.0, duration: 5.5, ease: "sine.out" }}, 0);
 
 // reduced motion: land on the finished lockup immediately
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {{
