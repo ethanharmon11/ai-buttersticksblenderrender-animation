@@ -43,14 +43,50 @@ def wave(width=3600, x0=-1000, amp=30, wl=400, depth=1100):
     return f"M{x0} 0 {seg} v{depth} h{-width} Z"
 
 
+def _drip_tips():
+    """Find the painted drips' tips on the gold vector's bottom edge —
+    the frozen melt the animation resumes."""
+    import collections
+    from svgpathtools import parse_path
+    path = parse_path(G["gold"][0]["d"])
+    bottom = collections.defaultdict(float)
+    for i in range(4000):
+        pt = path.point(i / 3999)
+        b = int(pt.real // 10) * 10
+        if pt.imag > bottom[b]:
+            bottom[b] = pt.imag
+    runs, cur = [], []
+    for b in sorted(bottom):
+        if 1540 <= b <= 1935 and bottom[b] > 975:
+            cur.append((b, bottom[b]))
+        else:
+            if len(cur) >= 2:
+                runs.append(cur)
+            cur = []
+    if len(cur) >= 2:
+        runs.append(cur)
+    tips = []
+    for r in runs:
+        xs = [q[0] for q in r]
+        tx, ty = max(r, key=lambda q: q[1])
+        tips.append((tx + 5, ty, max(xs) + 10 - min(xs)))
+    tips.sort(key=lambda t: -t[1])          # longest painted drip resumes first
+    return tips[:6]
+
+
+DRIP_TIPS = _drip_tips()
+print("painted drip tips:", [(round(t[0]), round(t[1]), t[2]) for t in DRIP_TIPS])
+
+
 def molten_members(cls):
     """The liquid: the REAL pat artwork + ball-coat + runnels, gooey-merged.
-    Same markup for the gold body and the green rim underneath."""
+    Runnels spawn buried inside the artwork's painted drip tips and resume
+    their frozen fall. Same markup for the gold body and the green rim."""
     runnels = ""
-    for i, (x0, drift) in enumerate([(1628, -30), (1688, -14), (1744, 0),
-                                     (1800, 16), (1858, 32)]):
-        runnels += (f'<ellipse class="{cls}Run" cx="{x0}" cy="962" '
-                    f'rx="{28 + (i % 3) * 5}" ry="34" data-drift="{drift}"/>\n')
+    for i, (tx, ty, w) in enumerate(DRIP_TIPS):
+        drift = max(-40, min(40, (tx - 1742) * 0.35))
+        runnels += (f'<ellipse class="{cls}Run" cx="{tx:.0f}" cy="{ty - 30:.0f}" '
+                    f'rx="{w / 2 + 7:.0f}" ry="20" data-drift="{drift:.0f}" data-i="{i}"/>\n')
     return f"""
     <g class="{cls}PatArt">{paths("gold", keep_fill=False)}</g>
     <ellipse class="{cls}TeeCup" cx="1741" cy="1190" rx="62" ry="24"/>
@@ -192,29 +228,32 @@ tl.addLabel("melt", 1.6)
   .to("#rimDilate", {{ attr: {{ radius: 3 }}, duration: 2.6, ease: "sine.inOut" }}, "melt+=0.3")
   // the real pat art slumps downward into the flow
   .to(".rPatArt, .gPatArt", {{ scaleY: 0.52, scaleX: 0.56, transformOrigin: "50% 100%",
-      duration: 1.8, ease: "power1.inOut" }}, "melt+=0.2")
-  .to(".rPatArt", {{ opacity: 0, duration: 1.6, ease: "sine.in" }}, "melt+=0.5")
-  .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.6, ease: "power1.out" }}, "melt+=0.05")
+      duration: 1.7, ease: "power1.inOut" }}, "melt+=0.7")
+  .to(".rPatArt", {{ opacity: 0, duration: 1.5, ease: "sine.in" }}, "melt+=0.9")
+  .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.6, ease: "power1.out" }}, "melt+=0.55")
   // butter coats the ball's crown, hugging the surface
-  .to("#coatWave", {{ y: 165, duration: 2.2, ease: "power1.inOut" }}, "melt+=0.25")
-  .to(".rRun, .gRun", {{ autoAlpha: 1, duration: 0.4, stagger: 0.15 }}, "melt+=0.3")
+  .to("#coatWave", {{ y: 165, duration: 2.1, ease: "power1.inOut" }}, "melt+=0.55")
+  .to(".rRun, .gRun", {{ autoAlpha: 1, duration: 0.25, stagger: 0.1 }}, "melt+=0.05")
   .to("#coatWave", {{ x: 14, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 5 }}, "melt+=0.3")
   .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
   // BSG rides the slumping butter down, liquefying as it goes
-  .to(".bsgL", {{ y: 215, scaleY: 1.55, transformOrigin: "50% 0%", duration: 1.8,
-      ease: "power1.inOut", stagger: 0.08 }}, "melt+=0.2")
-  .to(".bsgL", {{ fill: "{GOLDEN}", duration: 0.9, ease: "sine.in", stagger: 0.08 }}, "melt+=0.55")
-  .to(".bsgL", {{ autoAlpha: 0, duration: 0.7, ease: "sine.inOut", stagger: 0.08 }}, "melt+=1.25")
+  .to(".bsgL", {{ y: 215, scaleY: 1.55, transformOrigin: "50% 0%", duration: 1.7,
+      ease: "power1.inOut", stagger: 0.08 }}, "melt+=0.7")
+  .to(".bsgL", {{ fill: "{GOLDEN}", duration: 0.9, ease: "sine.in", stagger: 0.08 }}, "melt+=0.95")
+  .to(".bsgL", {{ autoAlpha: 0, duration: 0.7, ease: "sine.inOut", stagger: 0.08 }}, "melt+=1.6")
   .to("#dispMap", {{ attr: {{ scale: 26 }}, duration: 1.3, ease: "sine.in" }}, "melt+=0.5")
   .to("#bsgBlur", {{ attr: {{ stdDeviation: "0 19" }}, duration: 1.2, ease: "sine.in" }}, "melt+=0.7");
 
 // runnels slide down the ball as the coat spreads
 $$(".rRun, .gRun").forEach((r) => {{
   const drift = parseFloat(r.dataset.drift);
-  const t0 = 0.65 + (55 - Math.abs(drift)) / 75;
-  tl.to(r, {{ attr: {{ cy: 1235, cx: "+=" + drift }}, scaleY: 1.6,
-      transformOrigin: "50% 0%", duration: 2.2 + Math.abs(drift) / 55,
-      ease: "sine.in" }}, "melt+=" + t0);
+  const t0 = 0.12 + parseInt(r.dataset.i, 10) * 0.22;   // longest painted drip resumes first
+  // phase 1: the painted drip visibly lengthens from its tip...
+  tl.to(r, {{ attr: {{ ry: 62, cy: "+=44" }}, duration: 0.7, ease: "power1.in" }}, "melt+=" + t0)
+  // ...phase 2: it lets go and runs down the ball
+    .to(r, {{ attr: {{ cy: 1235, cx: "+=" + drift }}, scaleY: 1.35,
+      transformOrigin: "50% 0%", duration: 1.6 + Math.abs(drift) / 55,
+      ease: "sine.in" }}, "melt+=" + (t0 + 0.7));
 }});
 
 // ---- beat 3: the ball goes with it (3.3 - 5.2s)
