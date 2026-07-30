@@ -192,6 +192,19 @@ subprocess.run(["ffmpeg", "-y", "-i", str(SRC), "-vf", "scale=576:-2",
 site = build("melt.mp4")
 (ROOT / "gsap" / "intro_video.html").write_text(site, encoding="utf-8")
 
+# production embed: click skips, self-dismisses, signals the parent page
+embed = site.replace(
+    """document.body.addEventListener("click", () => {
+  video.pause(); video.currentTime = 0; tl.restart();
+});""",
+    """document.body.addEventListener("click", () => tl.progress(1));  // click = skip
+tl.eventCallback("onComplete", () => {
+  try { parent.postMessage("bsg-intro-done", "*"); } catch (e) {}
+  gsap.to(document.body, { opacity: 0, duration: 0.6, delay: 0.5,
+    onComplete: () => { document.body.style.display = "none"; } });
+});""")
+(ROOT / "gsap" / "intro_embed.html").write_text(embed, encoding="utf-8")
+
 b64 = base64.b64encode((ROOT / "gsap" / "melt_small.mp4").read_bytes()).decode()
 artifact = build(f"data:video/mp4;base64,{b64}")
 import re
