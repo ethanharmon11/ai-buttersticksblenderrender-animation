@@ -88,10 +88,25 @@ def build(video_src):
 
 <video id="melt" src="{video_src}" muted playsinline preload="auto"></video>
 
-<!-- the golden bloom and the browning field -->
-<div id="glow" class="overlay" style="opacity:0;
-  background: radial-gradient(circle at 50% 48%, {GOLDEN} 0%, {GOLDEN} 34%, rgba(217,182,78,0) 72%);"></div>
+<!-- the bloom born from the droplet's impact -->
+<div id="bloom" style="position:fixed; width:300px; height:300px; border-radius:50%;
+  background: radial-gradient(circle, {BROWN} 0%, {BROWN} 58%, rgba(140,94,46,0) 74%);
+  transform: translate(-50%,-50%) scale(0); pointer-events:none;"></div>
 <div id="brownField" class="overlay" style="opacity:0; background: {BROWN};"></div>
+
+<!-- THE droplet: matched to the video's own drops -->
+<svg id="drop" viewBox="0 0 100 140" style="position:fixed; width:26px; height:36px;
+     pointer-events:none; opacity:0; overflow:visible;">
+  <path d="M50 8 C50 8 88 60 88 94 A38 38 0 1 1 12 94 C12 60 50 8 50 8 Z"
+        fill="{GOLDEN}" stroke="#21522a" stroke-width="7"/>
+  <ellipse cx="36" cy="88" rx="9" ry="14" fill="#F3E6B9" opacity="0.85" transform="rotate(-18 36 88)"/>
+</svg>
+<svg id="splash" viewBox="0 0 40 40" style="position:fixed; width:40px; height:40px;
+     pointer-events:none; overflow:visible;">
+  <circle class="sp" cx="20" cy="20" r="5" fill="{GOLDEN}" stroke="#21522a" stroke-width="2" opacity="0"/>
+  <circle class="sp" cx="20" cy="20" r="4" fill="{GOLDEN}" stroke="#21522a" stroke-width="2" opacity="0"/>
+  <circle class="sp" cx="20" cy="20" r="3.4" fill="{GOLDEN}" stroke="#21522a" stroke-width="2" opacity="0"/>
+</svg>
 
 <!-- wordmark: fit, never cropped -->
 <svg class="overlay" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"
@@ -105,13 +120,26 @@ def build(video_src):
 
 <script>{GSAP}</script>
 <script>
+const $$ = (s) => gsap.utils.toArray(s);
 const video = document.getElementById("melt");
 const VIDEO_START = {VIDEO_START};
 const VIDEO_DUR = {VIDEO_DUR};
 
 gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 40 }});
 gsap.set(".golfLetter", {{ autoAlpha: 0, y: 24 }});
-gsap.set("#melt", {{ transformOrigin: "50% 45%" }});
+
+// geometry of the hanging drop in melt2's final frame (fractions of the video box)
+const vh = innerHeight, vw = innerWidth;
+const vidH = vh * 0.66, vidW = vidH * 1144 / 1808;
+const vidL = vw / 2 - vidW / 2, vidT = vh * 0.47 - vidH / 2;
+const hang = {{ x: vidL + vidW * 0.4345, y: vidT + vidH * 0.918 }};
+const impact = {{ x: hang.x, y: vh * 0.88 }};
+const dropW = Math.max(20, vidH * 0.052);
+gsap.set("#drop", {{ width: dropW, height: dropW * 1.38,
+  x: hang.x - dropW / 2, y: hang.y - dropW * 0.5, transformOrigin: "50% 12%" }});
+gsap.set("#bloom", {{ left: impact.x, top: impact.y }});
+gsap.set("#splash", {{ x: impact.x - 20, y: impact.y - 20 }});
+const bloomScale = Math.hypot(vw, vh) / 135;
 
 const tl = gsap.timeline({{ defaults: {{ ease: "power2.out" }} }});
 
@@ -119,25 +147,38 @@ const tl = gsap.timeline({{ defaults: {{ ease: "power2.out" }} }});
 tl.to("#melt", {{ opacity: 1, duration: 0.8, ease: "sine.out" }}, 0.15)
   .call(() => {{ if (!seeking) video.play(); }}, null, VIDEO_START);
 
-// ---- push INTO the butter: the glaze itself fills the screen ({V_END - 0.3:.2f} - {V_END + 1.4:.2f}s)
-tl.addLabel("push", {V_END - 0.3:.2f})
-  .to("#melt", {{ scale: 7.5, duration: 1.7, ease: "power2.in" }}, "push")
-  .to("#melt", {{ filter: "url(#unblack) blur(10px)", duration: 0.8, ease: "sine.in" }}, "push+=0.9")
-  .to("#glow", {{ opacity: 1, duration: 0.9, ease: "sine.in" }}, "push+=0.7")
-  .to("body", {{ backgroundColor: "{GOLDEN}", duration: 0.8, ease: "sine.inOut" }}, "push+=0.8")
-  // ...and the butter browns
-  .to("#brownField", {{ opacity: 1, duration: 1.0, ease: "sine.inOut" }}, "push+=1.55")
-  .to("body", {{ backgroundColor: "{BROWN}", duration: 1.0, ease: "sine.inOut" }}, "push+=1.55")
-  .to("#melt", {{ opacity: 0, duration: 0.4 }}, "push+=1.7");
+// ---- one last drop does the work ({V_END + 0.15:.2f}s onward)
+tl.addLabel("drop", {V_END + 0.15:.2f})
+  // it gathers under the stream's tip...
+  .to("#drop", {{ opacity: 1, duration: 0.18, ease: "sine.in" }}, "drop")
+  .to("#drop", {{ scale: 1.28, y: "+=" + dropW * 0.22, duration: 0.66, ease: "sine.inOut" }}, "drop+=0.1")
+  // ...lets go, stretching as it falls...
+  .to("#drop", {{ y: impact.y - dropW * 1.1, scaleY: 1.3, scaleX: 0.9,
+      duration: 0.5, ease: "power1.in" }}, "drop+=0.8")
+  // ...and lands: squash, splash, and the brown blooms from the impact
+  .to("#drop", {{ scaleY: 0.42, scaleX: 1.7, duration: 0.11, ease: "power2.out" }}, "drop+=1.3")
+  .to("#drop", {{ opacity: 0, duration: 0.2 }}, "drop+=1.45");
+
+$$(".sp").forEach((sp, i) => {{
+  const dx = [-44, 8, 40][i], dy = [-36, -52, -30][i];
+  tl.fromTo(sp, {{ opacity: 1, x: 0, y: 0 }},
+      {{ x: dx, y: dy, duration: 0.22, ease: "power1.out", immediateRender: false }}, "drop+=1.32")
+    .to(sp, {{ y: "+=46", opacity: 0, duration: 0.2, ease: "power1.in" }}, "drop+=1.54");
+}});
+
+tl.to("#bloom", {{ scale: bloomScale, duration: 1.35, ease: "power1.inOut" }}, "drop+=1.36")
+  .to("body", {{ backgroundColor: "{BROWN}", duration: 0.6, ease: "sine.inOut" }}, "drop+=2.2")
+  .to("#brownField", {{ opacity: 1, duration: 0.4 }}, "drop+=2.5")
+  .to("#melt", {{ opacity: 0, duration: 0.2 }}, "drop+=2.6");
 
 // ---- the wordmark surfaces, centered
-tl.addLabel("type", {V_END + 2.6:.2f})
+tl.addLabel("type", {V_END + 3.1:.2f})
   .to("#wmButter", {{ autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }}, "type")
   .to("#wmSticks", {{ autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }}, "type+=0.15")
   .to(".golfLetter", {{ autoAlpha: 1, y: 0, duration: 1.2, ease: "sine.out", stagger: 0.1 }}, "type+=0.45");
 
 // quiet hold to the end
-tl.to({{}}, {{ duration: 0.1 }}, {V_END + 5.2:.2f});
+tl.to({{}}, {{ duration: 0.1 }}, {V_END + 5.7:.2f});
 
 // reduced motion: land on the finished lockup immediately
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {{
