@@ -195,7 +195,7 @@ tl.addLabel("melt", 1.6)
   .to("#eraserRect", { attr: { height: 300 }, duration: 1.6, ease: "power1.out" }, "melt+=0.55")
   // butter coats the ball's crown, hugging the surface
   .to("#coatWave", { y: 165, duration: 2.1, ease: "power1.inOut" }, "melt+=0.55")
-  .to(".rRun, .gRun", { autoAlpha: 1, duration: 0.25, stagger: 0.1 }, "melt+=0.05")
+  .to(".gRun", { autoAlpha: 1, duration: 0.2, stagger: 0.1 }, "melt+=0.05")
   .to("#coatWave", { x: 14, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 5 }, "melt+=0.3")
   .to("#hornCover", { opacity: 1, duration: 0.5, ease: "sine.inOut" }, "melt+=0.9")
   // BSG rides the slumping butter down, liquefying as it goes
@@ -211,6 +211,9 @@ $$(".rRun, .gRun").forEach((r) => {
   const drift = parseFloat(r.dataset.drift);
   const t0 = 0.12 + parseInt(r.dataset.i, 10) * 0.22;   // longest painted drip resumes first
   // phase 1: the painted drip visibly lengthens from its tip...
+  if (r.classList.contains("rRun")) {
+    tl.to(r, { autoAlpha: 1, duration: 0.45, ease: "sine.in" }, "melt+=" + (t0 + 0.2));
+  }
   tl.to(r, { attr: { ry: 62, cy: "+=44" }, duration: 0.7, ease: "power1.in" }, "melt+=" + t0)
   // ...phase 2: it lets go and runs down the ball
     .to(r, { attr: { cy: 1235, cx: "+=" + drift }, scaleY: 1.35,
