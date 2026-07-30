@@ -54,7 +54,7 @@ def molten_members(cls):
     return f"""
     <g class="{cls}PatArt">{paths("gold", keep_fill=False)}</g>
     <ellipse class="{cls}TeeCup" cx="1741" cy="1190" rx="62" ry="24"/>
-    <rect class="{cls}TeeStem" x="1717" y="1195" width="49" height="185" rx="22"/>
+    <rect class="{cls}TeeStem" x="1717" y="1195" width="49" height="202" rx="22"/>
     <g clip-path="url(#coatClip)">
       <ellipse class="{cls}Coat" cx="{BALL_CX}" cy="{BALL_CY}" rx="{BALL_R + 4}" ry="{BALL_R + 4}"/>
     </g>
@@ -222,14 +222,14 @@ tl.addLabel("consume", 3.3)
   .to(".rPatArt, .gPatArt", {{ autoAlpha: 0, duration: 0.4 }}, "consume+=0.7")
   // ...and the whole molten mass slumps off the tee into the river
   .to("#coatWave", {{ y: 620, duration: 0.8, ease: "power1.in" }}, "consume+=0.6")
-  .to(".rTeeCup, .gTeeCup", {{ autoAlpha: 1, duration: 0.3, ease: "sine.out" }}, "consume+=0.55")
-  .to(".rTeeStem, .gTeeStem", {{ autoAlpha: 1, duration: 0.2 }}, "consume+=0.62")
-  .to(".rTeeStem, .gTeeStem", {{ scaleY: 1, duration: 0.75, ease: "power1.in" }}, "consume+=0.65")
+  .to(".rTeeCup, .gTeeCup", {{ autoAlpha: 1, duration: 0.25, ease: "sine.out" }}, "consume+=0.45")
+  .to(".rTeeStem, .gTeeStem", {{ autoAlpha: 1, duration: 0.18 }}, "consume+=0.5")
+  .to(".rTeeStem, .gTeeStem", {{ scaleY: 1, duration: 0.55, ease: "power1.in" }}, "consume+=0.52")
   .to(".rCoat, .gCoat", {{ attr: {{ cy: "+=300", ry: 96, rx: 238 }},
       duration: 1.35, ease: "power1.in" }}, "consume+=0.75")
   .to(".rRun, .gRun", {{ attr: {{ cy: "+=260" }}, autoAlpha: 0,
       duration: 0.9, ease: "power1.in", stagger: (i) => (i % 5) * 0.06 }}, "consume+=0.8")
-  .to(["#moltenRim", "#moltenGold"], {{ autoAlpha: 0, duration: 0.45, ease: "sine.in" }}, "consume+=1.65");
+  .to(["#moltenRim", "#moltenGold"], {{ autoAlpha: 0, duration: 0.45, ease: "sine.in" }}, "consume+=1.8");
 
 // drops accompany the cascade
 $$(".drop").forEach((d, i) => {{
