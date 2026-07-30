@@ -22,8 +22,18 @@ BROWN = "#8C5E2E"
 GOLDEN = "#D9B64E"
 DEEP = "#BD9A42"
 
-VIDEO_DUR = 8.04
+import subprocess
+
+SRC = ROOT / "reference" / "melt2.mp4"
+if not SRC.exists():
+    SRC = ROOT / "reference" / "melt1.mp4"
+VIDEO_DUR = float(subprocess.run(
+    ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+     "format=duration", "-of", "csv=p=0", str(SRC)],
+    capture_output=True, text=True).stdout.strip())
 VIDEO_START = 0.35          # timeline second when the video starts playing
+V_END = VIDEO_START + VIDEO_DUR
+print(f"video: {SRC.name}  duration {VIDEO_DUR:.2f}s")
 
 
 def paths(group, cls=""):
@@ -52,8 +62,8 @@ def build(video_src):
 <style>
   html, body {{ margin: 0; height: 100%; background: {CREAM}; overflow: hidden; }}
   #melt {{
-    position: fixed; left: 50%; top: 50%;
-    height: 104vh; transform: translate(-50%, -50%);
+    position: fixed; left: 50%; top: 47%;
+    height: 66vh; transform: translate(-50%, -50%);
     filter: url(#unblack);
     opacity: 0;
   }}
@@ -119,23 +129,23 @@ tl.to("#melt", {{ opacity: 1, duration: 0.8, ease: "sine.out" }}, 0.15)
   .call(() => {{ if (!seeking) video.play(); }}, null, VIDEO_START);
 
 // ---- the golden river rises to catch the drips (5.9 - 7.4s)
-tl.to("#pondBack", {{ y: 585, duration: 1.5, ease: "power1.inOut" }}, 5.9)
-  .to("#pondFront", {{ y: 606, duration: 1.5, ease: "power1.inOut" }}, 6.05);
+tl.to("#pondBack", {{ y: 585, duration: 1.5, ease: "power1.inOut" }}, {V_END - 2.5:.2f})
+  .to("#pondFront", {{ y: 606, duration: 1.5, ease: "power1.inOut" }}, {V_END - 2.35:.2f});
 
 // ---- the tide inverts everything as the melt completes (8.45 - 9.4s)
-tl.addLabel("tideUp", 8.45)
+tl.addLabel("tideUp", {V_END + 0.05:.2f})
   .to("#tide", {{ y: -85, duration: 0.95, ease: "power2.inOut" }}, "tideUp")
   .to("body", {{ backgroundColor: "{BROWN}", duration: 0.7, ease: "sine.inOut" }}, "tideUp+=0.25")
   .to("#melt", {{ opacity: 0, duration: 0.45, ease: "sine.in" }}, "tideUp+=0.35");
 
 // ---- the wordmark surfaces, centered (9.7 - 11.4s)
-tl.addLabel("type", 9.7)
+tl.addLabel("type", {V_END + 1.3:.2f})
   .to("#wmButter", {{ autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }}, "type")
   .to("#wmSticks", {{ autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }}, "type+=0.15")
   .to(".golfLetter", {{ autoAlpha: 1, y: 0, duration: 1.2, ease: "sine.out", stagger: 0.1 }}, "type+=0.45");
 
 // quiet hold to the end
-tl.to({{}}, {{ duration: 0.1 }}, 12.2);
+tl.to({{}}, {{ duration: 0.1 }}, {V_END + 3.8:.2f});
 
 // reduced motion: land on the finished lockup immediately
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {{
@@ -166,6 +176,14 @@ window.introTimeline = tl;
 </html>
 """
 
+
+import shutil
+shutil.copy(SRC, ROOT / "gsap" / "melt.mp4")
+subprocess.run(["ffmpeg", "-y", "-i", str(SRC), "-vf", "scale=576:-2",
+                "-c:v", "libx264", "-crf", "28", "-preset", "slow",
+                "-movflags", "+faststart", "-an",
+                str(ROOT / "gsap" / "melt_small.mp4")],
+               capture_output=True)
 
 site = build("melt.mp4")
 (ROOT / "gsap" / "intro_video.html").write_text(site, encoding="utf-8")

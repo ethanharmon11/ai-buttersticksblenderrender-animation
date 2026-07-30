@@ -2,8 +2,8 @@
 <style>
   html, body { margin: 0; height: 100%; background: #EADDC1; overflow: hidden; }
   #melt {
-    position: fixed; left: 50%; top: 50%;
-    height: 104vh; transform: translate(-50%, -50%);
+    position: fixed; left: 50%; top: 47%;
+    height: 66vh; transform: translate(-50%, -50%);
     filter: url(#unblack);
     opacity: 0;
   }
@@ -65,7 +65,7 @@
 <script>
 const video = document.getElementById("melt");
 const VIDEO_START = 0.35;
-const VIDEO_DUR = 8.04;
+const VIDEO_DUR = 8.041667;
 
 gsap.set(["#wmButter", "#wmSticks"], { autoAlpha: 0, y: 40 });
 gsap.set(".golfLetter", { autoAlpha: 0, y: 24 });
@@ -83,23 +83,23 @@ tl.to("#melt", { opacity: 1, duration: 0.8, ease: "sine.out" }, 0.15)
   .call(() => { if (!seeking) video.play(); }, null, VIDEO_START);
 
 // ---- the golden river rises to catch the drips (5.9 - 7.4s)
-tl.to("#pondBack", { y: 585, duration: 1.5, ease: "power1.inOut" }, 5.9)
-  .to("#pondFront", { y: 606, duration: 1.5, ease: "power1.inOut" }, 6.05);
+tl.to("#pondBack", { y: 585, duration: 1.5, ease: "power1.inOut" }, 5.89)
+  .to("#pondFront", { y: 606, duration: 1.5, ease: "power1.inOut" }, 6.04);
 
 // ---- the tide inverts everything as the melt completes (8.45 - 9.4s)
-tl.addLabel("tideUp", 8.45)
+tl.addLabel("tideUp", 8.44)
   .to("#tide", { y: -85, duration: 0.95, ease: "power2.inOut" }, "tideUp")
   .to("body", { backgroundColor: "#8C5E2E", duration: 0.7, ease: "sine.inOut" }, "tideUp+=0.25")
   .to("#melt", { opacity: 0, duration: 0.45, ease: "sine.in" }, "tideUp+=0.35");
 
 // ---- the wordmark surfaces, centered (9.7 - 11.4s)
-tl.addLabel("type", 9.7)
+tl.addLabel("type", 9.69)
   .to("#wmButter", { autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }, "type")
   .to("#wmSticks", { autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }, "type+=0.15")
   .to(".golfLetter", { autoAlpha: 1, y: 0, duration: 1.2, ease: "sine.out", stagger: 0.1 }, "type+=0.45");
 
 // quiet hold to the end
-tl.to({}, { duration: 0.1 }, 12.2);
+tl.to({}, { duration: 0.1 }, 12.19);
 
 // reduced motion: land on the finished lockup immediately
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
