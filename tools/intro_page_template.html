@@ -1,0 +1,107 @@
+<title>Butter Sticks Golf — Website Intro</title>
+<style>
+  :root {
+    --cream: #EADDC1;
+    --dark-brown: #4B311A;
+    --medium-brown: #8C5E2E;
+    --golden: #D9B64E;
+    --paper: #F2E9D5;
+    --ink: #3A2612;
+  }
+  html, body { min-height: 100%; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3.5rem 1.25rem 4rem;
+    gap: 0;
+  }
+  .eyebrow {
+    font-family: system-ui, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--medium-brown);
+  }
+  h1 {
+    margin: 0.6rem 0 0.35rem;
+    font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+    font-weight: 700;
+    font-style: italic;
+    color: var(--dark-brown);
+    text-align: center;
+    text-wrap: balance;
+  }
+  .sub {
+    font-size: 0.98rem;
+    color: var(--medium-brown);
+    margin-bottom: 2.2rem;
+    text-align: center;
+    font-style: italic;
+  }
+  .player {
+    width: min(960px, 100%);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px -24px rgba(75, 49, 26, 0.55);
+    border: 4px solid var(--dark-brown);
+    background: var(--dark-brown);
+    line-height: 0;
+  }
+  video { width: 100%; height: auto; display: block; }
+  .beats {
+    width: min(960px, 100%);
+    margin-top: 2.4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--medium-brown);
+    border: 1px solid var(--medium-brown);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .beat { background: var(--paper); padding: 1rem 1.1rem 1.15rem; }
+  .beat b {
+    display: block;
+    font-family: system-ui, sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--golden);
+    background: var(--dark-brown);
+    width: fit-content;
+    padding: 0.18rem 0.5rem;
+    border-radius: 99px;
+    margin-bottom: 0.55rem;
+  }
+  .beat p { margin: 0; font-size: 0.92rem; line-height: 1.5; color: var(--ink); }
+  footer {
+    margin-top: 2.6rem;
+    font-family: system-ui, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--medium-brown);
+  }
+</style>
+
+<span class="eyebrow">Butter Sticks Golf · Website Opening</span>
+<h1>The Butter Melt Intro</h1>
+<p class="sub">v2 — seven seconds, rendered flat-2D in Blender · 1920×1080 · 30 fps</p>
+
+<div class="player">
+  <video controls autoplay muted loop playsinline src="__VIDEO_DATA__"></video>
+</div>
+
+<div class="beats">
+  <div class="beat"><b>0.0–1.5s</b><p>The BSG mark ghosts onto cream and saturates to full color with a gentle pop.</p></div>
+  <div class="beat"><b>1.6–3.5s</b><p>The butter melts — golden streams pour down from the pat in an uneven, flowy river.</p></div>
+  <div class="beat"><b>3.5–4.0s</b><p>A rising butter pool floods the frame golden; a brown burst inverts the palette.</p></div>
+  <div class="beat"><b>4.0–7.0s</b><p>The badge jelly-settles upward, then Butter · Sticks · G-O-L-F stagger into the lockup.</p></div>
+</div>
+
+<footer>Butter Sticks Golf — internal review · WebM (163 KB) is the web-embed deliverable</footer>

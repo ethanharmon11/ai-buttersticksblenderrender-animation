@@ -1,0 +1,10 @@
+# Regenerable render output (210-frame PNG sequence, ~250MB)
+renders/frames/
+
+# Blender auto-backups
+*.blend1
+*.blend2
+
+# OneDrive / OS noise
+desktop.ini
+Thumbs.db
