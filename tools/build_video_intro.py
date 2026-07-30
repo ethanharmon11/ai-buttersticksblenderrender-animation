@@ -90,15 +90,16 @@ def build(video_src):
 
 <!-- the bloom born from the droplet's impact -->
 <div id="bloom" style="position:fixed; width:300px; height:300px; border-radius:50%;
+  margin:-150px 0 0 -150px; z-index:3; visibility:hidden;
   background: radial-gradient(circle, {BROWN} 0%, {BROWN} 58%, rgba(140,94,46,0) 74%);
-  transform: translate(-50%,-50%) scale(0); pointer-events:none;"></div>
-<div id="brownField" class="overlay" style="opacity:0; background: {BROWN};"></div>
+  pointer-events:none;"></div>
+<div id="brownField" class="overlay" style="opacity:0; background: {BROWN}; z-index:4;"></div>
 
 
 
 <!-- wordmark: fit, never cropped -->
 <svg class="overlay" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"
-     aria-label="Butter Sticks Golf">
+     style="z-index:5" aria-label="Butter Sticks Golf">
   <g id="wmMove" transform="translate(538.0,291.8) scale(0.41)" fill="{CREAM}">
     <g id="wmButter">{paths("wm_butter")}</g>
     <g id="wmSticks">{paths("wm_sticks")}</g>
@@ -108,6 +109,7 @@ def build(video_src):
 
 <script>{GSAP}</script>
 <script>
+gsap.ticker.lagSmoothing(0);
 const $$ = (s) => gsap.utils.toArray(s);
 const video = document.getElementById("melt");
 const VIDEO_START = {VIDEO_START};
@@ -116,17 +118,14 @@ const VIDEO_DUR = {VIDEO_DUR};
 gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 40 }});
 gsap.set(".golfLetter", {{ autoAlpha: 0, y: 24 }});
 
-// geometry of the hanging drop in melt2's final frame (fractions of the video box)
+// melt2's own last droplet exits the frame bottom at video-time 7.90s,
+// x = 72.6% across (measured by pixel-tracking the gold drops)
 const vh = innerHeight, vw = innerWidth;
 const vidH = vh * 0.66, vidW = vidH * 1144 / 1808;
 const vidL = vw / 2 - vidW / 2, vidT = vh * 0.47 - vidH / 2;
-const hang = {{ x: vidL + vidW * 0.4345, y: vidT + vidH * 0.918 }};
-const impact = {{ x: hang.x, y: vh * 0.88 }};
-const dropW = Math.max(20, vidH * 0.052);
-gsap.set("#drop", {{ width: dropW, height: dropW * 1.38,
-  x: hang.x - dropW / 2, y: hang.y - dropW * 0.5, transformOrigin: "50% 12%" }});
-gsap.set("#bloom", {{ left: impact.x, top: impact.y }});
-gsap.set("#splash", {{ x: impact.x - 20, y: impact.y - 20 }});
+const exitPt = {{ x: vidL + vidW * 0.726, y: vidT + vidH + vh * 0.012 }};
+gsap.set("#bloom", {{ left: exitPt.x, top: exitPt.y, scale: 0,
+  transformOrigin: "50% 50%", autoAlpha: 1 }});
 const bloomScale = Math.hypot(vw, vh) / 135;
 
 const tl = gsap.timeline({{ defaults: {{ ease: "power2.out" }} }});
@@ -137,7 +136,8 @@ tl.to("#melt", {{ opacity: 1, duration: 0.8, ease: "sine.out" }}, 0.15)
 
 // ---- the video's own last drop exits, and the brand blooms where it lands
 tl.addLabel("drop", {VIDEO_START + 7.90:.2f})
-  .to("#bloom", {{ scale: bloomScale, duration: 1.5, ease: "power1.inOut" }}, "drop+=0.06")
+  .fromTo("#bloom", {{ scale: 0 }}, {{ scale: bloomScale, duration: 1.5,
+      ease: "power1.inOut", immediateRender: false }}, "drop+=0.06")
   .to("body", {{ backgroundColor: "{BROWN}", duration: 0.6, ease: "sine.inOut" }}, "drop+=1.0")
   .to("#brownField", {{ opacity: 1, duration: 0.4 }}, "drop+=1.35")
   .to("#melt", {{ opacity: 0, duration: 0.2 }}, "drop+=1.45");
