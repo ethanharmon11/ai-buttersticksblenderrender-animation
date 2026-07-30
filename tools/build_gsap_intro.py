@@ -51,10 +51,6 @@ def molten_members(cls):
                     f'rx="{28 + (i % 3) * 5}" ry="34" data-drift="{drift}"/>\n')
     return f"""
     <g class="{cls}PatArt">{paths("gold", keep_fill=False)}</g>
-    <g clip-path="url(#ringClip)">
-      <circle class="{cls}Ring" cx="{BALL_CX}" cy="{BALL_CY}" r="{BALL_R - 2}"
-        fill="none" stroke="{GOLDEN}" stroke-width="30"/>
-    </g>
     <g clip-path="url(#coatClip)">
       <ellipse class="{cls}Coat" cx="{BALL_CX}" cy="{BALL_CY}" rx="{BALL_R + 4}" ry="{BALL_R + 4}"/>
     </g>
@@ -97,10 +93,7 @@ html = f"""<!doctype html>
       <feGaussianBlur id="bsgBlur" in="disp" stdDeviation="0 0"/>
     </filter>
     <clipPath id="coatClip">
-      <path id="coatWave" d="M1520 400 H1968 V1240 Q1934 1264 1898 1248 L1832 1162 Q1788 1110 1744 1078 Q1700 1110 1656 1162 L1590 1248 Q1554 1264 1520 1240 Z"/>
-    </clipPath>
-    <clipPath id="ringClip">
-      <rect id="ringRect" x="1520" y="898" width="448" height="0"/>
+      <path id="coatWave" d="M1520 400 H1968 V1128 Q1932 1146 1896 1136 L1834 1106 Q1788 1088 1744 1078 Q1700 1088 1654 1106 L1592 1136 Q1556 1146 1520 1128 Z"/>
     </clipPath>
     <clipPath id="eraserClip">
       <rect id="eraserRect" x="1520" y="740" width="440" height="0"/>
@@ -164,7 +157,7 @@ gsap.set("#badgeMove", {{ autoAlpha: 0, scale: 0.92, transformOrigin: "50% 50%" 
 gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 40 }});
 gsap.set(".golfLetter", {{ autoAlpha: 0, y: 24 }});
 gsap.set(".drop", {{ autoAlpha: 0 }});
-gsap.set("#coatWave", {{ y: -380 }});
+gsap.set("#coatWave", {{ y: -230 }});
 gsap.set(["#pondBack", "#pondFront", "#tide"], {{ y: 920 }});
 gsap.set("svg", {{ scale: 1.07, transformOrigin: "50% 50%" }});
 gsap.set(".rRun, .gRun", {{ autoAlpha: 0 }});
@@ -192,9 +185,7 @@ tl.addLabel("melt", 1.6)
   .to(".rPatArt", {{ opacity: 0, duration: 1.6, ease: "sine.in" }}, "melt+=0.5")
   .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.6, ease: "power1.out" }}, "melt+=0.05")
   // butter coats the ball's crown, hugging the surface
-  .to("#ringRect", {{ attr: {{ height: 430 }}, duration: 0.85, ease: "power1.inOut" }}, "melt+=0.45")
-  .to(".rRing, .gRing", {{ autoAlpha: 0, duration: 0.5, ease: "sine.inOut" }}, "melt+=2.7")
-  .to("#coatWave", {{ y: 255, duration: 2.5, ease: "power1.inOut" }}, "melt+=0.4")
+  .to("#coatWave", {{ y: 235, duration: 2.5, ease: "power1.inOut" }}, "melt+=0.4")
   .to(".rRun, .gRun", {{ autoAlpha: 1, duration: 0.4, stagger: 0.15 }}, "melt+=0.3")
   .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
   // BSG melts letter by letter: stretches, sinks, turns to butter, dissolves
