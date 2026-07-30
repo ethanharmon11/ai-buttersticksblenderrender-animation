@@ -21,7 +21,9 @@ GOLDEN = "#D9B64E"
 DEEP = "#BD9A42"
 GREEN = "#21522a"
 
-BALL_CX, BALL_CY, BALL_R = 1742.1, 1104.6, 186
+# True sphere: crown sits at the vertical middle of the 'S' in BSG (y 855.9),
+# radius from the ball's widest span -> center y = 855.9 + 185.8
+BALL_CX, BALL_CY, BALL_R = 1742.1, 1041.7, 185.8
 
 
 def paths(group, keep_fill=True, cls=""):
@@ -157,7 +159,7 @@ gsap.set("#badgeMove", {{ autoAlpha: 0, scale: 0.92, transformOrigin: "50% 50%" 
 gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 40 }});
 gsap.set(".golfLetter", {{ autoAlpha: 0, y: 24 }});
 gsap.set(".drop", {{ autoAlpha: 0 }});
-gsap.set("#coatWave", {{ y: -230 }});
+gsap.set("#coatWave", {{ y: -282 }});
 gsap.set(["#pondBack", "#pondFront", "#tide"], {{ y: 920 }});
 gsap.set("svg", {{ scale: 1.07, transformOrigin: "50% 50%" }});
 gsap.set(".rRun, .gRun", {{ autoAlpha: 0 }});
@@ -185,7 +187,7 @@ tl.addLabel("melt", 1.6)
   .to(".rPatArt", {{ opacity: 0, duration: 1.6, ease: "sine.in" }}, "melt+=0.5")
   .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.6, ease: "power1.out" }}, "melt+=0.05")
   // butter coats the ball's crown, hugging the surface
-  .to("#coatWave", {{ y: 235, duration: 2.5, ease: "power1.inOut" }}, "melt+=0.4")
+  .to("#coatWave", {{ y: 165, duration: 2.5, ease: "power1.inOut" }}, "melt+=0.4")
   .to(".rRun, .gRun", {{ autoAlpha: 1, duration: 0.4, stagger: 0.15 }}, "melt+=0.3")
   .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
   // BSG melts letter by letter: stretches, sinks, turns to butter, dissolves
