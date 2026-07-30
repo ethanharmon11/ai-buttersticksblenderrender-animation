@@ -52,7 +52,7 @@ def molten_members(cls):
     return f"""
     <g class="{cls}PatArt">{paths("gold", keep_fill=False)}</g>
     <g clip-path="url(#coatClip)">
-      <ellipse class="{cls}Coat" cx="{BALL_CX}" cy="{BALL_CY}" rx="{BALL_R - 10}" ry="{BALL_R - 10}"/>
+      <ellipse class="{cls}Coat" cx="{BALL_CX}" cy="{BALL_CY}" rx="{BALL_R + 4}" ry="{BALL_R + 4}"/>
     </g>
     {runnels}"""
 
@@ -93,7 +93,7 @@ html = f"""<!doctype html>
       <feGaussianBlur id="bsgBlur" in="disp" stdDeviation="0 0"/>
     </filter>
     <clipPath id="coatClip">
-      <path id="coatWave" d="M1520 600 H1968 V1062 q-37 24 -75 0 t-75 0 t-75 0 t-75 0 t-74 0 t-74 0 Z"/>
+      <path id="coatWave" d="M1520 400 H1968 V1240 Q1934 1264 1898 1248 L1832 1162 Q1788 1110 1744 1078 Q1700 1110 1656 1162 L1590 1248 Q1554 1264 1520 1240 Z"/>
     </clipPath>
     <clipPath id="eraserClip">
       <rect id="eraserRect" x="1520" y="740" width="440" height="0"/>
@@ -157,7 +157,7 @@ gsap.set("#badgeMove", {{ autoAlpha: 0, scale: 0.92, transformOrigin: "50% 50%" 
 gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 40 }});
 gsap.set(".golfLetter", {{ autoAlpha: 0, y: 24 }});
 gsap.set(".drop", {{ autoAlpha: 0 }});
-gsap.set("#coatWave", {{ y: -185 }});
+gsap.set("#coatWave", {{ y: -380 }});
 gsap.set(["#pondBack", "#pondFront", "#tide"], {{ y: 920 }});
 gsap.set("svg", {{ scale: 1.07, transformOrigin: "50% 50%" }});
 gsap.set(".rRun, .gRun", {{ autoAlpha: 0 }});
@@ -185,7 +185,7 @@ tl.addLabel("melt", 1.6)
   .to(".rPatArt", {{ opacity: 0, duration: 1.6, ease: "sine.in" }}, "melt+=0.5")
   .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.6, ease: "power1.out" }}, "melt+=0.05")
   // butter coats the ball's crown, hugging the surface
-  .to("#coatWave", {{ y: 0, duration: 1.9, ease: "power1.inOut" }}, "melt+=0.4")
+  .to("#coatWave", {{ y: 255, duration: 2.5, ease: "power1.inOut" }}, "melt+=0.4")
   .to(".rRun, .gRun", {{ autoAlpha: 1, duration: 0.4, stagger: 0.15 }}, "melt+=0.3")
   .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
   // BSG melts letter by letter: stretches, sinks, turns to butter, dissolves
@@ -199,7 +199,7 @@ tl.addLabel("melt", 1.6)
 // runnels slide down the ball as the coat spreads
 $$(".rRun, .gRun").forEach((r) => {{
   const drift = parseFloat(r.dataset.drift);
-  const t0 = 0.7 + Math.abs(drift) / 80;
+  const t0 = 0.65 + (55 - Math.abs(drift)) / 75;
   tl.to(r, {{ attr: {{ cy: 1235, cx: "+=" + drift }}, scaleY: 1.6,
       transformOrigin: "50% 0%", duration: 2.2 + Math.abs(drift) / 55,
       ease: "sine.in" }}, "melt+=" + t0);
@@ -207,9 +207,7 @@ $$(".rRun, .gRun").forEach((r) => {{
 
 // ---- beat 3: the ball goes with it (3.3 - 5.2s)
 tl.addLabel("consume", 3.3)
-  // the coat swallows the whole ball
-  .to("#coatWave", {{ y: 165, duration: 0.9, ease: "power1.inOut" }}, "consume")
-  .to(".rCoat, .gCoat", {{ attr: {{ rx: 204, ry: 204 }}, duration: 0.6, ease: "sine.inOut" }}, "consume+=0.3")
+
   // pond arrives to receive the cascade
   .to("#pondBack", {{ y: 585, duration: 1.3, ease: "power1.inOut" }}, "consume+=0.1")
   .to("#pondFront", {{ y: 606, duration: 1.3, ease: "power1.inOut" }}, "consume+=0.22")
