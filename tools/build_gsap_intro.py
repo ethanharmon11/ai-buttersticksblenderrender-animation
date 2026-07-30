@@ -47,8 +47,8 @@ def molten_members(cls):
     """The liquid: the REAL pat artwork + ball-coat + runnels, gooey-merged.
     Same markup for the gold body and the green rim underneath."""
     runnels = ""
-    for i, (x0, drift) in enumerate([(1604, -50), (1676, -20), (1744, 0),
-                                     (1814, 22), (1882, 52)]):
+    for i, (x0, drift) in enumerate([(1628, -30), (1688, -14), (1744, 0),
+                                     (1800, 16), (1858, 32)]):
         runnels += (f'<ellipse class="{cls}Run" cx="{x0}" cy="962" '
                     f'rx="{28 + (i % 3) * 5}" ry="34" data-drift="{drift}"/>\n')
     return f"""
@@ -97,7 +97,7 @@ html = f"""<!doctype html>
       <feGaussianBlur id="bsgBlur" in="disp" stdDeviation="0 0"/>
     </filter>
     <clipPath id="coatClip">
-      <path id="coatWave" d="M1520 400 H1968 V1128 Q1932 1146 1896 1136 L1834 1106 Q1788 1088 1744 1078 Q1700 1088 1654 1106 L1592 1136 Q1556 1146 1520 1128 Z"/>
+      <path id="coatWave" d="M1520 400 H1968 V1150 Q1938 1132 1908 1140 Q1872 1150 1846 1118 Q1812 1082 1776 1092 Q1754 1098 1744 1076 Q1716 1084 1688 1102 Q1656 1124 1620 1112 Q1584 1100 1560 1130 Q1540 1148 1520 1132 Z"/>
     </clipPath>
     <mask id="eraserMask">
       <rect id="eraserRect" x="1520" y="740" width="440" height="0" fill="white"/>
@@ -166,7 +166,7 @@ gsap.set("#badgeMove", {{ autoAlpha: 0, scale: 0.92, transformOrigin: "50% 50%" 
 gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 40 }});
 gsap.set(".golfLetter", {{ autoAlpha: 0, y: 24 }});
 gsap.set(".drop", {{ autoAlpha: 0 }});
-gsap.set("#coatWave", {{ y: -282 }});
+gsap.set("#coatWave", {{ y: -300 }});
 gsap.set(["#pondBack", "#pondFront", "#tide"], {{ y: 920 }});
 gsap.set("svg", {{ scale: 1.07, transformOrigin: "50% 50%" }});
 gsap.set(".rRun, .gRun", {{ autoAlpha: 0 }});
@@ -191,13 +191,14 @@ tl.addLabel("melt", 1.6)
   // the outline melts into the mass: rim thins as everything liquefies
   .to("#rimDilate", {{ attr: {{ radius: 3 }}, duration: 2.6, ease: "sine.inOut" }}, "melt+=0.3")
   // the real pat art slumps downward into the flow
-  .to(".rPatArt, .gPatArt", {{ scaleY: 0.52, transformOrigin: "50% 100%",
+  .to(".rPatArt, .gPatArt", {{ scaleY: 0.52, scaleX: 0.56, transformOrigin: "50% 100%",
       duration: 1.8, ease: "power1.inOut" }}, "melt+=0.2")
   .to(".rPatArt", {{ opacity: 0, duration: 1.6, ease: "sine.in" }}, "melt+=0.5")
   .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.6, ease: "power1.out" }}, "melt+=0.05")
   // butter coats the ball's crown, hugging the surface
   .to("#coatWave", {{ y: 165, duration: 2.2, ease: "power1.inOut" }}, "melt+=0.25")
   .to(".rRun, .gRun", {{ autoAlpha: 1, duration: 0.4, stagger: 0.15 }}, "melt+=0.3")
+  .to("#coatWave", {{ x: 14, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 5 }}, "melt+=0.3")
   .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
   // BSG rides the slumping butter down, liquefying as it goes
   .to(".bsgL", {{ y: 215, scaleY: 1.55, transformOrigin: "50% 0%", duration: 1.8,
