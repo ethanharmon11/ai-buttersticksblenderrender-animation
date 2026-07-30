@@ -252,9 +252,9 @@ $$(".rRun, .gRun").forEach((r) => {{
   if (r.classList.contains("rRun")) {{
     tl.to(r, {{ autoAlpha: 1, duration: 0.45, ease: "sine.in" }}, "melt+=" + (t0 + 0.2));
   }}
-  tl.to(r, {{ attr: {{ ry: 62, cy: "+=44" }}, duration: 0.7, ease: "power1.in" }}, "melt+=" + t0)
+  tl.to(r, {{ attr: {{ ry: 44, cy: "+=40" }}, scaleX: 0.78, transformOrigin: "50% 50%", duration: 0.7, ease: "power1.in" }}, "melt+=" + t0)
   // ...phase 2: it lets go and runs down the ball
-    .to(r, {{ attr: {{ cy: 1235, cx: "+=" + drift }}, scaleY: 1.35,
+    .to(r, {{ attr: {{ cy: 1235, cx: "+=" + drift }}, scaleY: 1.3, scaleX: 0.68,
       transformOrigin: "50% 0%", duration: 1.6 + Math.abs(drift) / 55,
       ease: "sine.in" }}, "melt+=" + (t0 + 0.7));
 }});
