@@ -99,9 +99,14 @@ html = f"""<!doctype html>
     <clipPath id="coatClip">
       <path id="coatWave" d="M1520 400 H1968 V1128 Q1932 1146 1896 1136 L1834 1106 Q1788 1088 1744 1078 Q1700 1088 1654 1106 L1592 1136 Q1556 1146 1520 1128 Z"/>
     </clipPath>
-    <clipPath id="eraserClip">
-      <rect id="eraserRect" x="1520" y="740" width="440" height="0"/>
-    </clipPath>
+    <mask id="eraserMask">
+      <rect id="eraserRect" x="1520" y="740" width="440" height="0" fill="white"/>
+      <circle cx="{BALL_CX}" cy="{BALL_CY}" r="202" fill="black"/>
+    </mask>
+    <mask id="ballGuard">
+      <rect x="1500" y="700" width="480" height="380" fill="white"/>
+      <circle cx="{BALL_CX}" cy="{BALL_CY}" r="202" fill="black"/>
+    </mask>
     <clipPath id="sceneClip"><rect x="0" y="0" width="1600" height="900"/></clipPath>
   </defs>
   <g clip-path="url(#sceneClip)">
@@ -125,12 +130,12 @@ html = f"""<!doctype html>
     <g transform="translate(105,22.3) scale(0.4)">
       <g id="staticA">
         {paths("sil")}
-        <g clip-path="url(#eraserClip)"><g id="eraser" fill="{CREAM}" stroke="{CREAM}" stroke-width="9">{paths("sil", keep_fill=False)}</g></g>
+        <g mask="url(#eraserMask)"><g id="eraser" fill="{CREAM}" stroke="{CREAM}" stroke-width="9">{paths("sil", keep_fill=False)}</g></g>
         {paths("ball")}
         {paths("dimples_cream")}
         {paths("dimples_green")}
         {paths("tee")}
-        <g id="hornCover" fill="{CREAM}" opacity="0">
+        <g id="hornCover" fill="{CREAM}" opacity="0" mask="url(#ballGuard)">
           <rect x="1872" y="876" width="92" height="104" rx="14"/>
           <rect x="1522" y="886" width="84" height="90" rx="14"/>
         </g>
