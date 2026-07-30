@@ -88,14 +88,10 @@ def build(video_src):
 
 <video id="melt" src="{video_src}" muted playsinline preload="auto"></video>
 
-<!-- liquids: full-bleed cover -->
-<svg class="overlay" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-  <g clip-path="url(#lc)"><clipPath id="lc"><rect width="1600" height="900"/></clipPath>
-    <g id="pondBack"><path d="{wave(amp=34)}" fill="{DEEP}"/></g>
-    <g id="pondFront"><path d="{wave(amp=26)}" fill="{GOLDEN}"/></g>
-    <g id="tide"><path d="{wave(amp=38)}" fill="{BROWN}"/></g>
-  </g>
-</svg>
+<!-- the golden bloom and the browning field -->
+<div id="glow" class="overlay" style="opacity:0;
+  background: radial-gradient(circle at 50% 48%, {GOLDEN} 0%, {GOLDEN} 34%, rgba(217,182,78,0) 72%);"></div>
+<div id="brownField" class="overlay" style="opacity:0; background: {BROWN};"></div>
 
 <!-- wordmark: fit, never cropped -->
 <svg class="overlay" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"
@@ -115,12 +111,7 @@ const VIDEO_DUR = {VIDEO_DUR};
 
 gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 40 }});
 gsap.set(".golfLetter", {{ autoAlpha: 0, y: 24 }});
-gsap.set(["#pondBack", "#pondFront", "#tide"], {{ y: 920 }});
-
-// endless sideways drift on every liquid surface
-gsap.to("#pondBack path",  {{ x: -400, duration: 2.1, ease: "none", repeat: -1 }});
-gsap.to("#pondFront path", {{ x: -400, duration: 2.8, ease: "none", repeat: -1 }});
-gsap.to("#tide path",      {{ x: -400, duration: 2.4, ease: "none", repeat: -1 }});
+gsap.set("#melt", {{ transformOrigin: "50% 45%" }});
 
 const tl = gsap.timeline({{ defaults: {{ ease: "power2.out" }} }});
 
@@ -128,30 +119,31 @@ const tl = gsap.timeline({{ defaults: {{ ease: "power2.out" }} }});
 tl.to("#melt", {{ opacity: 1, duration: 0.8, ease: "sine.out" }}, 0.15)
   .call(() => {{ if (!seeking) video.play(); }}, null, VIDEO_START);
 
-// ---- the golden river rises to catch the drips (5.9 - 7.4s)
-tl.to("#pondBack", {{ y: 585, duration: 1.5, ease: "power1.inOut" }}, {V_END - 2.5:.2f})
-  .to("#pondFront", {{ y: 606, duration: 1.5, ease: "power1.inOut" }}, {V_END - 2.35:.2f});
+// ---- push INTO the butter: the glaze itself fills the screen ({V_END - 0.3:.2f} - {V_END + 1.4:.2f}s)
+tl.addLabel("push", {V_END - 0.3:.2f})
+  .to("#melt", {{ scale: 7.5, duration: 1.7, ease: "power2.in" }}, "push")
+  .to("#melt", {{ filter: "url(#unblack) blur(10px)", duration: 0.8, ease: "sine.in" }}, "push+=0.9")
+  .to("#glow", {{ opacity: 1, duration: 0.9, ease: "sine.in" }}, "push+=0.7")
+  .to("body", {{ backgroundColor: "{GOLDEN}", duration: 0.8, ease: "sine.inOut" }}, "push+=0.8")
+  // ...and the butter browns
+  .to("#brownField", {{ opacity: 1, duration: 1.0, ease: "sine.inOut" }}, "push+=1.55")
+  .to("body", {{ backgroundColor: "{BROWN}", duration: 1.0, ease: "sine.inOut" }}, "push+=1.55")
+  .to("#melt", {{ opacity: 0, duration: 0.4 }}, "push+=1.7");
 
-// ---- the tide inverts everything as the melt completes (8.45 - 9.4s)
-tl.addLabel("tideUp", {V_END + 0.05:.2f})
-  .to("#tide", {{ y: -85, duration: 0.95, ease: "power2.inOut" }}, "tideUp")
-  .to("body", {{ backgroundColor: "{BROWN}", duration: 0.7, ease: "sine.inOut" }}, "tideUp+=0.25")
-  .to("#melt", {{ opacity: 0, duration: 0.45, ease: "sine.in" }}, "tideUp+=0.35");
-
-// ---- the wordmark surfaces, centered (9.7 - 11.4s)
-tl.addLabel("type", {V_END + 1.3:.2f})
+// ---- the wordmark surfaces, centered
+tl.addLabel("type", {V_END + 2.6:.2f})
   .to("#wmButter", {{ autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }}, "type")
   .to("#wmSticks", {{ autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }}, "type+=0.15")
   .to(".golfLetter", {{ autoAlpha: 1, y: 0, duration: 1.2, ease: "sine.out", stagger: 0.1 }}, "type+=0.45");
 
 // quiet hold to the end
-tl.to({{}}, {{ duration: 0.1 }}, {V_END + 3.8:.2f});
+tl.to({{}}, {{ duration: 0.1 }}, {V_END + 5.2:.2f});
 
 // reduced motion: land on the finished lockup immediately
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {{
   tl.progress(1).pause();
   video.style.display = "none";
-  gsap.set("#tide", {{ y: -85 }});
+  gsap.set("#brownField", {{ opacity: 1 }});
   gsap.set("body", {{ backgroundColor: "{BROWN}" }});
 }}
 
