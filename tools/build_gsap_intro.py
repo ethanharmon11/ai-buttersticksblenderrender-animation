@@ -190,11 +190,11 @@ tl.addLabel("melt", 1.6)
   .to("#coatWave", {{ y: 165, duration: 2.5, ease: "power1.inOut" }}, "melt+=0.4")
   .to(".rRun, .gRun", {{ autoAlpha: 1, duration: 0.4, stagger: 0.15 }}, "melt+=0.3")
   .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
-  // BSG melts letter by letter: stretches, sinks, turns to butter, dissolves
-  .to(".bsgL", {{ scaleY: 2.3, y: 70, transformOrigin: "50% 0%", duration: 1.7,
-      ease: "power1.in", stagger: 0.14 }}, "melt+=0.45")
-  .to(".bsgL", {{ fill: "{GOLDEN}", duration: 1.0, ease: "sine.in", stagger: 0.14 }}, "melt+=0.65")
-  .to(".bsgL", {{ autoAlpha: 0, duration: 0.85, ease: "sine.inOut", stagger: 0.14 }}, "melt+=1.15")
+  // BSG rides the slumping butter down, liquefying as it goes
+  .to(".bsgL", {{ y: 215, scaleY: 1.55, transformOrigin: "50% 0%", duration: 1.8,
+      ease: "power1.inOut", stagger: 0.08 }}, "melt+=0.2")
+  .to(".bsgL", {{ fill: "{GOLDEN}", duration: 0.9, ease: "sine.in", stagger: 0.08 }}, "melt+=0.55")
+  .to(".bsgL", {{ autoAlpha: 0, duration: 0.7, ease: "sine.inOut", stagger: 0.08 }}, "melt+=1.25")
   .to("#dispMap", {{ attr: {{ scale: 26 }}, duration: 1.3, ease: "sine.in" }}, "melt+=0.5")
   .to("#bsgBlur", {{ attr: {{ stdDeviation: "0 19" }}, duration: 1.2, ease: "sine.in" }}, "melt+=0.7");
 
@@ -217,6 +217,7 @@ tl.addLabel("consume", 3.3)
   .to("#staticA", {{ autoAlpha: 0, duration: 0.38, ease: "sine.inOut" }}, "consume+=0.78")
   .to(".rPatArt, .gPatArt", {{ autoAlpha: 0, duration: 0.4 }}, "consume+=0.7")
   // ...and the whole molten mass slumps off the tee into the river
+  .to("#coatWave", {{ y: 620, duration: 0.8, ease: "power1.in" }}, "consume+=0.6")
   .to(".rCoat, .gCoat", {{ attr: {{ cy: "+=300", ry: 96, rx: 238 }},
       duration: 1.35, ease: "power1.in" }}, "consume+=0.75")
   .to(".rRun, .gRun", {{ attr: {{ cy: "+=260" }}, autoAlpha: 0,
