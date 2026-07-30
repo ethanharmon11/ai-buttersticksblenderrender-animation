@@ -53,6 +53,8 @@ def molten_members(cls):
                     f'rx="{28 + (i % 3) * 5}" ry="34" data-drift="{drift}"/>\n')
     return f"""
     <g class="{cls}PatArt">{paths("gold", keep_fill=False)}</g>
+    <ellipse class="{cls}TeeCup" cx="1741" cy="1190" rx="62" ry="24"/>
+    <rect class="{cls}TeeStem" x="1717" y="1195" width="49" height="185" rx="22"/>
     <g clip-path="url(#coatClip)">
       <ellipse class="{cls}Coat" cx="{BALL_CX}" cy="{BALL_CY}" rx="{BALL_R + 4}" ry="{BALL_R + 4}"/>
     </g>
@@ -163,6 +165,8 @@ gsap.set("#coatWave", {{ y: -282 }});
 gsap.set(["#pondBack", "#pondFront", "#tide"], {{ y: 920 }});
 gsap.set("svg", {{ scale: 1.07, transformOrigin: "50% 50%" }});
 gsap.set(".rRun, .gRun", {{ autoAlpha: 0 }});
+gsap.set(".rTeeCup, .gTeeCup, .rTeeStem, .gTeeStem", {{ autoAlpha: 0 }});
+gsap.set(".rTeeStem, .gTeeStem", {{ scaleY: 0.12, transformOrigin: "50% 0%" }});
 
 // endless sideways drift on every liquid surface (wavelength = 400)
 gsap.to("#pondBack path",  {{ x: -400, duration: 2.1, ease: "none", repeat: -1 }});
@@ -218,6 +222,9 @@ tl.addLabel("consume", 3.3)
   .to(".rPatArt, .gPatArt", {{ autoAlpha: 0, duration: 0.4 }}, "consume+=0.7")
   // ...and the whole molten mass slumps off the tee into the river
   .to("#coatWave", {{ y: 620, duration: 0.8, ease: "power1.in" }}, "consume+=0.6")
+  .to(".rTeeCup, .gTeeCup", {{ autoAlpha: 1, duration: 0.3, ease: "sine.out" }}, "consume+=0.55")
+  .to(".rTeeStem, .gTeeStem", {{ autoAlpha: 1, duration: 0.2 }}, "consume+=0.62")
+  .to(".rTeeStem, .gTeeStem", {{ scaleY: 1, duration: 0.75, ease: "power1.in" }}, "consume+=0.65")
   .to(".rCoat, .gCoat", {{ attr: {{ cy: "+=300", ry: 96, rx: 238 }},
       duration: 1.35, ease: "power1.in" }}, "consume+=0.75")
   .to(".rRun, .gRun", {{ attr: {{ cy: "+=260" }}, autoAlpha: 0,
