@@ -33,8 +33,8 @@
         xChannelSelector="R" yChannelSelector="G" result="disp"/>
       <feGaussianBlur id="bsgBlur" in="disp" stdDeviation="0 0"/>
     </filter>
-    <clipPath id="coatClip">
-      <path id="coatWave" d="M1520 400 H1968 V1150 Q1938 1132 1908 1140 Q1872 1150 1846 1118 Q1812 1082 1776 1092 Q1754 1098 1744 1076 Q1716 1084 1688 1102 Q1656 1124 1620 1112 Q1584 1100 1560 1130 Q1540 1148 1520 1132 Z"/>
+    <clipPath id="ballClip">
+      <circle cx="1742.1" cy="1041.7" r="187.8"/>
     </clipPath>
     <mask id="eraserMask">
       <rect id="eraserRect" x="1520" y="740" width="440" height="0" fill="white"/>
@@ -50,11 +50,11 @@
 
   <rect id="bg" width="1600" height="900" fill="#EADDC1"/>
 
-  <!-- gentle drops falling from the cascading mass into the pond -->
+  <!-- droplets detaching from the glaze into the pond -->
   <g id="dripLayer" filter="url(#goo)" fill="#D9B64E" transform="translate(105,22.3) scale(0.4)">
-    <ellipse class="drop" cx="1688" cy="1112" rx="26" ry="34"/>
-    <ellipse class="drop" cx="1748" cy="1120" rx="30" ry="38"/>
-    <ellipse class="drop" cx="1806" cy="1110" rx="24" ry="32"/>
+    <ellipse class="drop" cx="1688" cy="1150" rx="22" ry="30"/>
+    <ellipse class="drop" cx="1748" cy="1240" rx="26" ry="34"/>
+    <ellipse class="drop" cx="1802" cy="1170" rx="20" ry="28"/>
   </g>
 
   <!-- liquids -->
@@ -105,28 +105,41 @@
           <rect x="1522" y="886" width="84" height="90" rx="14"/>
         </g>
       </g>
-      <!-- the molten butter: real art in the goo from frame one -->
       <g id="moltenRim" filter="url(#gooRim)">
     <g class="rPatArt"><path d="M 1567.0794,805.0633000000001 C 1609.861,795.0788000000001 1653.3692,785.0944000000001 1695.4243,775.1099000000002 L 1773.7997,756.2660000000001 C 1786.7239,753.3075000000001 1795.0346,750.5086000000001 1816.691,757.5790000000001 C 1847.8474,767.7821000000001 1879.2848,777.7509000000001 1910.16,788.1884000000001 C 1924.0271,792.9228000000002 1933.4418,800.1880000000001 1932.8479,822.0788000000001 L 1932.9395,880.4629000000001 C 1933.1039,894.1698000000001 1927.05,900.6620000000001 1914.3782,904.4862 C 1910.2658,905.7034000000001 1906.5003,906.3977000000001 1902.3515,907.9258000000001 C 1895.9406,910.3120000000001 1892.821,912.3362000000001 1889.8157,916.5335000000001 C 1884.0892,924.5998000000001 1878.8074,924.3693000000001 1873.9718,922.2053000000001 C 1864.9911,918.3587000000001 1856.2456,920.3220000000001 1847.3936,923.0492000000002 C 1822.4683,930.6670000000001 1796.3467,938.4243000000001 1770.4716,944.9874000000001 C 1748.5101,950.5189000000001 1734.8494,959.2474000000001 1732.5967,983.3319000000001 C 1731.9557,993.8473000000001 1732.7018,997.5278000000001 1733.2058,1003.0662000000001 C 1733.7997,1008.8865000000001 1733.643,1012.6736000000001 1732.737,1015.3946000000001 C 1730.472,1021.8950000000001 1724.8014,1022.7871000000001 1721.8619,1022.2383000000001 C 1715.6676,1021.0531000000001 1711.0879,1015.0366000000001 1710.6117,1004.5662000000001 C 1710.3696,997.7067000000001 1711.018,988.8320000000001 1710.6585,982.3004000000001 C 1710.1535,972.5685000000001 1704.172,964.7667000000001 1695.471,963.1756000000001 C 1685.9475,961.9009000000001 1679.8106,968.3437000000001 1675.9794,975.8955000000001 C 1674.8351,978.1510000000001 1673.9277,981.3335000000001 1672.5458,983.2364000000001 C 1669.9826,986.6215000000001 1666.1585,985.8627000000001 1661.6597,987.2911000000001 C 1658.1005,988.4210000000002 1655.0391,990.7332000000001 1653.0956,993.4099000000001 C 1649.6583,998.5900000000001 1650.127,1004.2156000000001 1650.6581,1010.1445000000001 C 1651.7055,1017.6450000000001 1654.5805,1023.2701000000002 1653.237,1035.3171000000002 C 1652.3229,1042.6851000000001 1646.8384,1045.2468000000001 1642.1275,1044.6924000000001 C 1633.6237,1043.5574000000001 1631.7006,1031.3709000000001 1632.5794,1024.0595 C 1633.4473,1016.7581000000001 1635.9253,1011.4737 1637.9087,1005.7387000000001 C 1640.1665,999.1215000000001 1642.4243,992.4572000000001 1643.3461,987.3634000000001 C 1645.7846,972.8775 1640.0446,964.7726000000001 1628.252,957.9726 L 1603.408,945.0818000000002 C 1595.5328,941.4846000000001 1586.9546,946.1972000000001 1586.8607,955.0195000000001 L 1586.6266,973.7695000000001 C 1586.2966,979.5165000000001 1583.9887,982.5544000000001 1579.5952,982.5354000000001 C 1566.322,982.2596000000001 1573.1141,959.0186000000001 1571.8606,949.0426000000001 C 1570.6344,940.3734000000001 1567.0397,933.8761000000001 1561.3139,929.3322000000001 C 1556.9303,925.9255 1550.2745,924.6287000000001 1546.1957,920.9414000000002 C 1542.9138,917.8797000000001 1541.1881,913.6515 1540.8048,908.5197000000001 C 1540.1254,899.3867000000001 1540.8989,857.4884000000001 1540.946,831.9726 C 1541.49,815.3735000000001 1552.0326,808.5706000000001 1567.0794,805.0633000000001" fill-rule="evenodd"/></g>
-    <ellipse class="rTeeCup" cx="1741" cy="1190" rx="62" ry="24"/>
-    <rect class="rTeeStem" x="1717" y="1195" width="49" height="202" rx="22"/>
-    <g clip-path="url(#coatClip)">
-      <ellipse class="rCoat" cx="1742.1" cy="1041.7" rx="189.8" ry="189.8"/>
+    <g clip-path="url(#ballClip)">
+      <ellipse class="rCap" cx="1742.1" cy="938" rx="168" ry="96"/>
+      <rect class="rStream" x="1617" y="892" width="30" height="330" rx="15.0" data-order="3"/>
+<rect class="rStream" x="1671" y="892" width="42" height="400" rx="21.0" data-order="0"/>
+<rect class="rStream" x="1733" y="892" width="34" height="360" rx="17.0" data-order="1"/>
+<rect class="rStream" x="1785" y="892" width="38" height="395" rx="19.0" data-order="2"/>
+<rect class="rStream" x="1847" y="892" width="26" height="300" rx="13.0" data-order="4"/>
+
     </g>
-    <ellipse class="rRun" cx="1645" cy="1015" rx="32" ry="20" data-drift="-34" data-i="0"/>
-<ellipse class="rRun" cx="1725" cy="992" rx="27" ry="20" data-drift="-6" data-i="1"/>
-<ellipse class="rRun" cx="1575" cy="953" rx="17" ry="20" data-drift="-40" data-i="2"/>
+    <ellipse class="rTeeCup" cx="1741" cy="1192" rx="54" ry="20"/>
+    <rect class="rTeeStreamA" x="1714" y="1206" width="16" height="176" rx="8"/>
+    <rect class="rTeeStreamB" x="1744" y="1206" width="13" height="150" rx="6"/>
+    <ellipse class="rRun" cx="1645" cy="1019" rx="23" ry="16" data-drift="-34" data-i="0"/>
+<ellipse class="rRun" cx="1725" cy="996" rx="18" ry="16" data-drift="-6" data-i="1"/>
+<ellipse class="rRun" cx="1575" cy="957" rx="8" ry="16" data-drift="-40" data-i="2"/>
 </g>
       <g id="moltenGold" filter="url(#goo)" fill="#D9B64E">
     <g class="gPatArt"><path d="M 1567.0794,805.0633000000001 C 1609.861,795.0788000000001 1653.3692,785.0944000000001 1695.4243,775.1099000000002 L 1773.7997,756.2660000000001 C 1786.7239,753.3075000000001 1795.0346,750.5086000000001 1816.691,757.5790000000001 C 1847.8474,767.7821000000001 1879.2848,777.7509000000001 1910.16,788.1884000000001 C 1924.0271,792.9228000000002 1933.4418,800.1880000000001 1932.8479,822.0788000000001 L 1932.9395,880.4629000000001 C 1933.1039,894.1698000000001 1927.05,900.6620000000001 1914.3782,904.4862 C 1910.2658,905.7034000000001 1906.5003,906.3977000000001 1902.3515,907.9258000000001 C 1895.9406,910.3120000000001 1892.821,912.3362000000001 1889.8157,916.5335000000001 C 1884.0892,924.5998000000001 1878.8074,924.3693000000001 1873.9718,922.2053000000001 C 1864.9911,918.3587000000001 1856.2456,920.3220000000001 1847.3936,923.0492000000002 C 1822.4683,930.6670000000001 1796.3467,938.4243000000001 1770.4716,944.9874000000001 C 1748.5101,950.5189000000001 1734.8494,959.2474000000001 1732.5967,983.3319000000001 C 1731.9557,993.8473000000001 1732.7018,997.5278000000001 1733.2058,1003.0662000000001 C 1733.7997,1008.8865000000001 1733.643,1012.6736000000001 1732.737,1015.3946000000001 C 1730.472,1021.8950000000001 1724.8014,1022.7871000000001 1721.8619,1022.2383000000001 C 1715.6676,1021.0531000000001 1711.0879,1015.0366000000001 1710.6117,1004.5662000000001 C 1710.3696,997.7067000000001 1711.018,988.8320000000001 1710.6585,982.3004000000001 C 1710.1535,972.5685000000001 1704.172,964.7667000000001 1695.471,963.1756000000001 C 1685.9475,961.9009000000001 1679.8106,968.3437000000001 1675.9794,975.8955000000001 C 1674.8351,978.1510000000001 1673.9277,981.3335000000001 1672.5458,983.2364000000001 C 1669.9826,986.6215000000001 1666.1585,985.8627000000001 1661.6597,987.2911000000001 C 1658.1005,988.4210000000002 1655.0391,990.7332000000001 1653.0956,993.4099000000001 C 1649.6583,998.5900000000001 1650.127,1004.2156000000001 1650.6581,1010.1445000000001 C 1651.7055,1017.6450000000001 1654.5805,1023.2701000000002 1653.237,1035.3171000000002 C 1652.3229,1042.6851000000001 1646.8384,1045.2468000000001 1642.1275,1044.6924000000001 C 1633.6237,1043.5574000000001 1631.7006,1031.3709000000001 1632.5794,1024.0595 C 1633.4473,1016.7581000000001 1635.9253,1011.4737 1637.9087,1005.7387000000001 C 1640.1665,999.1215000000001 1642.4243,992.4572000000001 1643.3461,987.3634000000001 C 1645.7846,972.8775 1640.0446,964.7726000000001 1628.252,957.9726 L 1603.408,945.0818000000002 C 1595.5328,941.4846000000001 1586.9546,946.1972000000001 1586.8607,955.0195000000001 L 1586.6266,973.7695000000001 C 1586.2966,979.5165000000001 1583.9887,982.5544000000001 1579.5952,982.5354000000001 C 1566.322,982.2596000000001 1573.1141,959.0186000000001 1571.8606,949.0426000000001 C 1570.6344,940.3734000000001 1567.0397,933.8761000000001 1561.3139,929.3322000000001 C 1556.9303,925.9255 1550.2745,924.6287000000001 1546.1957,920.9414000000002 C 1542.9138,917.8797000000001 1541.1881,913.6515 1540.8048,908.5197000000001 C 1540.1254,899.3867000000001 1540.8989,857.4884000000001 1540.946,831.9726 C 1541.49,815.3735000000001 1552.0326,808.5706000000001 1567.0794,805.0633000000001" fill-rule="evenodd"/></g>
-    <ellipse class="gTeeCup" cx="1741" cy="1190" rx="62" ry="24"/>
-    <rect class="gTeeStem" x="1717" y="1195" width="49" height="202" rx="22"/>
-    <g clip-path="url(#coatClip)">
-      <ellipse class="gCoat" cx="1742.1" cy="1041.7" rx="189.8" ry="189.8"/>
+    <g clip-path="url(#ballClip)">
+      <ellipse class="gCap" cx="1742.1" cy="938" rx="168" ry="96"/>
+      <rect class="gStream" x="1617" y="892" width="30" height="330" rx="15.0" data-order="3"/>
+<rect class="gStream" x="1671" y="892" width="42" height="400" rx="21.0" data-order="0"/>
+<rect class="gStream" x="1733" y="892" width="34" height="360" rx="17.0" data-order="1"/>
+<rect class="gStream" x="1785" y="892" width="38" height="395" rx="19.0" data-order="2"/>
+<rect class="gStream" x="1847" y="892" width="26" height="300" rx="13.0" data-order="4"/>
+
     </g>
-    <ellipse class="gRun" cx="1645" cy="1015" rx="32" ry="20" data-drift="-34" data-i="0"/>
-<ellipse class="gRun" cx="1725" cy="992" rx="27" ry="20" data-drift="-6" data-i="1"/>
-<ellipse class="gRun" cx="1575" cy="953" rx="17" ry="20" data-drift="-40" data-i="2"/>
+    <ellipse class="gTeeCup" cx="1741" cy="1192" rx="54" ry="20"/>
+    <rect class="gTeeStreamA" x="1714" y="1206" width="16" height="176" rx="8"/>
+    <rect class="gTeeStreamB" x="1744" y="1206" width="13" height="150" rx="6"/>
+    <ellipse class="gRun" cx="1645" cy="1019" rx="23" ry="16" data-drift="-34" data-i="0"/>
+<ellipse class="gRun" cx="1725" cy="996" rx="18" ry="16" data-drift="-6" data-i="1"/>
+<ellipse class="gRun" cx="1575" cy="957" rx="8" ry="16" data-drift="-40" data-i="2"/>
 </g>
       <g id="bsg" filter="url(#lettersMelt)"><path d="M 1702.0774,807.9856000000001 C 1709.8911,808.8651000000001 1716.7363,811.9371000000001 1721.1317,816.9201000000002 C 1728.5978,825.3855000000001 1727.0614,836.8618000000001 1720.9049,845.6050000000001 C 1716.7796,851.4702000000001 1710.2376,856.0419 1703.6712,858.1423000000001 C 1701.9292,858.6738000000001 1701.7588,859.6427000000001 1703.1555,860.2987 C 1710.5302,863.5001000000001 1714.7344,869.6133000000001 1715.3898,878.2989000000001 C 1715.6007,886.9616000000001 1713.354,894.0998000000001 1709.0425,900.0033000000001 C 1700.1417,911.7526000000001 1683.8709,919.0498000000001 1669.6871,918.0962000000001 C 1663.4319,917.3796000000001 1659.5827,915.1062000000001 1655.3432,910.2678000000001 C 1654.9291,909.7621000000001 1654.6561,909.6549000000001 1654.312,910.1742000000002 C 1648.6724,919.1210000000001 1642.1627,924.7900000000001 1635.3275,927.0962000000001 C 1626.8224,929.8847000000001 1617.8869,928.4098000000001 1613.5773,922.3618000000001 C 1610.8285,918.3678000000001 1610.8291,911.2316000000001 1613.0617,906.5178000000001 C 1615.0901,902.4668000000001 1618.8395,901.2292000000001 1620.5615,905.3928000000001 C 1622.1943,909.1025000000001 1624.4243,911.6086000000001 1627.5462,912.3773000000001 C 1631.156,913.0846000000001 1634.1792,911.4646000000001 1636.8551,908.2104000000002 C 1642.1085,901.3355000000001 1645.41,892.1326000000001 1647.843,885.3068000000001 C 1655.4249,864.4387000000002 1665.2988,832.6243000000001 1677.3993,819.0721000000001 C 1678.0317,818.2714000000001 1677.2017,818.1308000000001 1675.9227,818.3572000000001 C 1664.1585,820.1544000000001 1649.1742,828.4542000000001 1643.5471,836.7640000000001 C 1641.6763,839.5264000000001 1640.356,843.4779000000001 1643.5315,845.9086000000001 C 1644.7521,846.8811000000001 1647.0208,847.9385000000001 1648.5471,848.7211000000001 C 1650.5549,849.7365000000001 1649.6685,851.8772000000001 1648.313,853.1741000000001 C 1644.8168,856.4382000000002 1640.3687,857.7152000000001 1635.891,856.8772000000001 C 1629.3878,855.2604000000001 1626.457,850.0959000000001 1626.9378,843.4240000000001 C 1627.8528,837.0628000000002 1632.8511,830.5817000000001 1639.9223,825.0958 C 1659.505,811.9643000000001 1676.9551,805.9735000000001 1702.0774,807.9856000000001 M 1675.0208,865.9804000000001 C 1678.9467,865.9645000000002 1685.2514,866.3413000000002 1689.0131,867.9723000000001 C 1701.7007,873.5818000000002 1698.1228,886.6444000000001 1695.2947,891.9730000000001 C 1692.7575,896.6584000000001 1688.9605,901.0053000000001 1683.6735,904.0854000000002 C 1676.5271,908.1089000000001 1667.1067,908.9738000000001 1660.2789,903.1293000000001 C 1659.6694,902.6157000000001 1659.3883,902.1726000000001 1659.7166,901.2545000000001 C 1664.6902,889.9913000000001 1669.1023,878.6584000000001 1673.0756,867.2696000000001 C 1673.3928,866.4198000000001 1673.9855,865.9920000000001 1675.0208,865.9804000000001 M 1693.6495,820.4478000000001 C 1694.8202,819.6110000000001 1696.3405,819.1881000000001 1697.9649,819.1416000000002 C 1702.0205,819.0849000000001 1705.1452,821.4952000000001 1707.5512,825.0246000000001 C 1712.356,832.8292000000001 1707.1532,843.2826000000001 1703.7077,846.7984000000001 C 1698.0302,853.0757000000001 1690.3071,857.4737000000001 1679.0043,858.2594000000001 C 1677.9708,858.3240000000001 1677.026,858.2481000000001 1677.223,857.2752000000002 C 1679.7501,850.2637000000001 1688.5355,824.1051000000001 1693.6495,820.4478000000001" fill-rule="evenodd" fill="#b15023" class="bsgL"/>
 <path d="M 1784.3244,834.5170000000002 C 1789.8626,830.9839000000001 1793.6376,823.2762000000001 1792.9962,816.5167000000001 C 1791.0624,800.3065000000001 1773.9763,796.5634000000001 1760.0587,800.8391000000001 C 1746.9832,804.8785000000001 1737.2155,816.5365000000002 1737.6834,830.4856000000001 C 1738.0355,839.0961000000001 1741.9686,846.1881000000001 1748.1832,853.1735000000001 C 1754.3239,860.1501000000001 1761.4257,865.7437000000001 1766.6054,874.5955000000001 C 1769.7665,880.8045000000001 1769.0187,887.8988000000002 1765.8085,892.6896000000002 C 1761.8964,898.4643000000001 1754.955,901.9739000000001 1747.3397,900.7522000000001 C 1741.2453,899.4862 1736.747,894.2291000000001 1735.7145,888.6582000000001 C 1734.763,882.7666000000002 1735.6113,876.5721000000001 1738.8082,872.0641000000002 C 1739.9194,870.5309000000001 1739.425,869.6717000000001 1738.0108,869.6269000000001 C 1734.8091,869.5073000000001 1731.2102,870.4183000000002 1727.7457,873.7048000000001 C 1721.9004,879.6275 1719.2316,888.1740000000001 1721.2771,895.2209000000001 C 1724.377,904.8825000000002 1734.287,912.0051000000001 1745.8866,912.4712000000001 C 1755.8134,912.5743000000001 1764.7413,909.3440000000002 1773.5899,902.0178000000001 C 1777.8762,898.1162000000002 1781.3273,893.7849000000001 1783.2626,889.5902000000001 C 1786.1975,883.0665000000001 1786.0844,873.7831000000001 1783.4998,866.9314000000002 C 1778.7881,854.3246000000001 1765.4984,846.7556000000001 1758.2854,835.2446000000001 C 1756.5454,832.4366000000001 1754.8087,828.0809000000002 1755.3501,822.7651000000001 C 1756.081,816.9102000000001 1759.6633,812.7257000000001 1764.3197,810.8222000000001 C 1768.1995,809.2490000000001 1774.4474,808.9970000000001 1777.341,812.8850000000001 C 1779.7949,816.3571000000001 1780.17,821.1638000000002 1779.71,827.2532000000001 C 1779.5784,828.8854000000001 1779.2765,830.8702000000001 1779.6397,832.7845000000001 C 1780.287,835.6823 1782.9031,835.3691000000001 1784.3244,834.5170000000002" fill-rule="evenodd" fill="#b15023" class="bsgL"/>
@@ -171,12 +184,13 @@ gsap.set("#badgeMove", { autoAlpha: 0, scale: 0.92, transformOrigin: "50% 50%" }
 gsap.set(["#wmButter", "#wmSticks"], { autoAlpha: 0, y: 40 });
 gsap.set(".golfLetter", { autoAlpha: 0, y: 24 });
 gsap.set(".drop", { autoAlpha: 0 });
-gsap.set("#coatWave", { y: -300 });
 gsap.set(["#pondBack", "#pondFront", "#tide"], { y: 920 });
 gsap.set("svg", { scale: 1.07, transformOrigin: "50% 50%" });
 gsap.set(".rRun, .gRun", { autoAlpha: 0 });
-gsap.set(".rTeeCup, .gTeeCup, .rTeeStem, .gTeeStem", { autoAlpha: 0 });
-gsap.set(".rTeeStem, .gTeeStem", { scaleY: 0.12, transformOrigin: "50% 0%" });
+gsap.set(".rCap, .gCap", { autoAlpha: 0, scale: 0.55, transformOrigin: "50% 20%" });
+gsap.set(".rStream, .gStream", { autoAlpha: 0, scaleY: 0.05, transformOrigin: "50% 0%" });
+gsap.set(".rTeeCup, .gTeeCup, .rTeeStreamA, .gTeeStreamA, .rTeeStreamB, .gTeeStreamB", { autoAlpha: 0 });
+gsap.set(".rTeeStreamA, .gTeeStreamA, .rTeeStreamB, .gTeeStreamB", { scaleY: 0.08, transformOrigin: "50% 0%" });
 
 // endless sideways drift on every liquid surface (wavelength = 400)
 gsap.to("#pondBack path",  { x: -400, duration: 2.1, ease: "none", repeat: -1 });
@@ -185,95 +199,100 @@ gsap.to("#tide path",      { x: -400, duration: 2.4, ease: "none", repeat: -1 })
 
 const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
 
-// ---- beat 1: arrival on cream (0 - 1.4s)
+// ---- beat 1: arrival on cream (0 - 1.5s)
 tl.addLabel("in", 0.15)
   .to("#badgeMove", { autoAlpha: 1, duration: 0.7, ease: "sine.out" }, "in")
   .to("#badgeMove", { scale: 1.0, duration: 1.2, ease: "sine.out" }, "in");
 
-// ---- beat 2: the pat melts in place (1.6 - 3.4s)
+// ---- beat 2: the frozen melt resumes (1.6 - 3.4s)  [ref: 0.0 - 1.8s]
 tl.addLabel("melt", 1.6)
   .to("#speed", { autoAlpha: 0, duration: 0.4 }, "melt")
-  // the outline melts into the mass: rim thins as everything liquefies
-  .to("#rimDilate", { attr: { radius: 3 }, duration: 2.6, ease: "sine.inOut" }, "melt+=0.3")
-  // the real pat art slumps downward into the flow
-  .to(".rPatArt, .gPatArt", { scaleY: 0.52, scaleX: 0.56, transformOrigin: "50% 100%",
-      duration: 1.7, ease: "power1.inOut" }, "melt+=0.7")
-  .to(".rPatArt", { opacity: 0, duration: 1.5, ease: "sine.in" }, "melt+=0.9")
-  .to("#eraserRect", { attr: { height: 300 }, duration: 1.6, ease: "power1.out" }, "melt+=0.55")
-  // butter coats the ball's crown, hugging the surface
-  .to("#coatWave", { y: 165, duration: 2.1, ease: "power1.inOut" }, "melt+=0.55")
-  .to(".gRun", { autoAlpha: 1, duration: 0.2, stagger: 0.1 }, "melt+=0.05")
-  .to("#coatWave", { x: 14, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 5 }, "melt+=0.3")
-  .to("#hornCover", { opacity: 1, duration: 0.5, ease: "sine.inOut" }, "melt+=0.9")
-  // BSG rides the slumping butter down, liquefying as it goes
-  .to(".bsgL", { y: 215, scaleY: 1.55, transformOrigin: "50% 0%", duration: 1.7,
-      ease: "power1.inOut", stagger: 0.08 }, "melt+=0.7")
-  .to(".bsgL", { fill: "#D9B64E", duration: 0.9, ease: "sine.in", stagger: 0.08 }, "melt+=0.95")
-  .to(".bsgL", { autoAlpha: 0, duration: 0.7, ease: "sine.inOut", stagger: 0.08 }, "melt+=1.6")
-  .to("#dispMap", { attr: { scale: 26 }, duration: 1.3, ease: "sine.in" }, "melt+=0.5")
-  .to("#bsgBlur", { attr: { stdDeviation: "0 19" }, duration: 1.2, ease: "sine.in" }, "melt+=0.7");
+  .to("#rimDilate", { attr: { radius: 4 }, duration: 2.6, ease: "sine.inOut" }, "melt+=0.4")
+  .to(".gRun", { autoAlpha: 1, duration: 0.2, stagger: 0.1 }, "melt+=0.05");
 
-// runnels slide down the ball as the coat spreads
 $$(".rRun, .gRun").forEach((r) => {
   const drift = parseFloat(r.dataset.drift);
   const t0 = 0.12 + parseInt(r.dataset.i, 10) * 0.22;   // longest painted drip resumes first
-  // phase 1: the painted drip visibly lengthens from its tip...
   if (r.classList.contains("rRun")) {
     tl.to(r, { autoAlpha: 1, duration: 0.45, ease: "sine.in" }, "melt+=" + (t0 + 0.2));
   }
-  tl.to(r, { attr: { ry: 44, cy: "+=40" }, scaleX: 0.78, transformOrigin: "50% 50%", duration: 0.7, ease: "power1.in" }, "melt+=" + t0)
-  // ...phase 2: it lets go and runs down the ball
+  tl.to(r, { attr: { ry: 44, cy: "+=40" }, scaleX: 0.78, transformOrigin: "50% 50%", duration: 0.8, ease: "power1.in" }, "melt+=" + t0)
     .to(r, { attr: { cy: 1235, cx: "+=" + drift }, scaleY: 1.3, scaleX: 0.68,
-      transformOrigin: "50% 0%", duration: 1.6 + Math.abs(drift) / 55,
-      ease: "sine.in" }, "melt+=" + (t0 + 0.7));
+      transformOrigin: "50% 0%", duration: 1.9 + Math.abs(drift) / 55,
+      ease: "sine.in" }, "melt+=" + (t0 + 0.8));
 });
 
-// ---- beat 3: the ball goes with it (3.3 - 5.2s)
-tl.addLabel("consume", 3.3)
+// ---- beat 3: the pat becomes a cap conforming to the crown (2.3 - 4.4s)  [ref: 1.5 - 3.0s]
+tl.to(".rPatArt, .gPatArt", { scaleY: 0.34, scaleX: 0.60, transformOrigin: "50% 100%",
+      duration: 2.0, ease: "power1.inOut" }, "melt+=0.7")
+  .to(".rPatArt", { opacity: 0, duration: 1.7, ease: "sine.in" }, "melt+=1.0")
+  .to("#eraserRect", { attr: { height: 300 }, duration: 1.9, ease: "power1.out" }, "melt+=0.6")
+  .to(".rCap, .gCap", { autoAlpha: 1, duration: 0.5, ease: "sine.inOut" }, "melt+=0.9")
+  .to(".rCap, .gCap", { scale: 1.0, duration: 1.9, ease: "power1.inOut" }, "melt+=0.9")
+  .to(".rCap, .gCap", { attr: { cy: "+=26", ry: 108 }, duration: 2.6, ease: "sine.inOut" }, "melt+=3.0")
+  .to("#hornCover", { opacity: 1, duration: 0.5, ease: "sine.inOut" }, "melt+=1.2")
+  // BSG rides the cap, warps with its curve, stays alive deep into the melt
+  .to(".bsgL", { y: 132, scaleY: 1.18, transformOrigin: "50% 0%", duration: 2.0,
+      ease: "power1.inOut", stagger: 0.08 }, "melt+=0.7")
+  .to(".bsgL", { rotation: (i) => [-6, 0, 6, 2][i % 4], duration: 2.0, ease: "sine.inOut", stagger: 0.08 }, "melt+=0.9")
+  .to(".bsgL", { fill: "#D9B64E", duration: 1.2, ease: "sine.in", stagger: 0.1 }, "melt+=2.6")
+  .to(".bsgL", { autoAlpha: 0, duration: 0.9, ease: "sine.inOut", stagger: 0.1 }, "melt+=3.8")
+  .to("#dispMap", { attr: { scale: 24 }, duration: 1.6, ease: "sine.in" }, "melt+=2.2")
+  .to("#bsgBlur", { attr: { stdDeviation: "0 16" }, duration: 1.4, ease: "sine.in" }, "melt+=2.6");
 
-  // pond arrives to receive the cascade
-  .to("#pondBack", { y: 585, duration: 1.3, ease: "power1.inOut" }, "consume+=0.1")
-  .to("#pondFront", { y: 606, duration: 1.3, ease: "power1.inOut" }, "consume+=0.22")
-  // everything solid fades beneath the gold (invisible handoff)
-  .to("#staticA", { autoAlpha: 0, duration: 0.22, ease: "sine.inOut" }, "consume+=0.72")
-  .to(".rPatArt, .gPatArt", { autoAlpha: 0, duration: 0.4 }, "consume+=0.8")
-  // ...and the whole molten mass slumps off the tee into the river
-  .to("#coatWave", { y: 620, duration: 0.8, ease: "power1.in" }, "consume+=0.6")
-  .to(".rTeeCup, .gTeeCup", { autoAlpha: 1, duration: 0.25, ease: "sine.out" }, "consume+=0.45")
-  .to(".rTeeStem, .gTeeStem", { autoAlpha: 1, duration: 0.18 }, "consume+=0.5")
-  .to(".rTeeStem, .gTeeStem", { scaleY: 1, duration: 0.42, ease: "power1.in" }, "consume+=0.52")
-  .to(".rCoat, .gCoat", { attr: { cy: "+=360", ry: 96, rx: 238 },
-      duration: 1.35, ease: "power1.in" }, "consume+=0.85")
-  .to(".rRun, .gRun", { attr: { cy: "+=260" }, autoAlpha: 0,
-      duration: 0.9, ease: "power1.in", stagger: (i) => (i % 5) * 0.06 }, "consume+=0.9")
-  .to(["#moltenRim", "#moltenGold"], { autoAlpha: 0, duration: 0.28, ease: "sine.in" }, "consume+=1.9");
+// ---- beat 4: streams glaze the ball, dimples peeking through (3.2 - 7.0s)  [ref: 2.0 - 6.5s]
+tl.addLabel("glaze", 3.2);
+$$(".rStream, .gStream").forEach((st) => {
+  const order = parseInt(st.dataset.order, 10);
+  const t0 = order * 0.45;
+  tl.to(st, { autoAlpha: 1, duration: 0.3, ease: "sine.in" }, "glaze+=" + t0)
+    .to(st, { scaleY: 1.0, duration: 2.0 + order * 0.15, ease: "power1.inOut" }, "glaze+=" + (t0 + 0.1));
+});
 
-// drops accompany the cascade
+// streams keep swelling gently — coverage grows but never seals the dimples
+tl.to(".rStream, .gStream", { scaleX: 1.28, transformOrigin: "50% 50%", duration: 1.9,
+      ease: "sine.inOut" }, "glaze+=2.7")
+  // butter reaches the tee and runs down it
+  .to(".rTeeCup, .gTeeCup", { autoAlpha: 1, duration: 0.35, ease: "sine.out" }, "glaze+=2.4")
+  .to(".rTeeStreamA, .gTeeStreamA", { autoAlpha: 1, duration: 0.2 }, "glaze+=2.7")
+  .to(".rTeeStreamA, .gTeeStreamA", { scaleY: 1, duration: 1.3, ease: "power1.in" }, "glaze+=2.75")
+  .to(".rTeeStreamB, .gTeeStreamB", { autoAlpha: 1, duration: 0.2 }, "glaze+=3.15")
+  .to(".rTeeStreamB, .gTeeStreamB", { scaleY: 1, duration: 1.2, ease: "power1.in" }, "glaze+=3.2")
+  // pond rises to receive the drips
+  .to("#pondBack", { y: 585, duration: 1.45, ease: "power1.inOut" }, "glaze+=3.4")
+  .to("#pondFront", { y: 606, duration: 1.45, ease: "power1.inOut" }, "glaze+=3.52");
+
+// droplets detach from the glaze throughout  [ref: continuous]
 $$(".drop").forEach((d, i) => {
-  [0, 1].forEach((w) => {
-    const t0 = 3.7 + i * 0.35 + w * 0.8;
+  [0, 1, 2].forEach((w) => {
+    const t0 = 4.0 + i * 0.45 + w * 1.25;
     tl.fromTo(d, { autoAlpha: 1, y: 0, scaleY: 1, transformOrigin: "50% 0%" },
-      { y: 385, scaleY: 2.0, duration: 1.05, ease: "power1.in", immediateRender: false }, t0)
-      .to(d, { autoAlpha: 0, duration: 0.12 }, t0 + 0.9);
+      { y: 385, scaleY: 1.9, duration: 1.15, ease: "power1.in", immediateRender: false }, t0)
+      .to(d, { autoAlpha: 0, duration: 0.12 }, t0 + 1.0);
   });
 });
 
-// ---- beat 4: the brown tide inversion (5.3 - 6.2s)
-tl.addLabel("tideUp", 5.3)
+// ---- beat 5: the whole glazed object sinks into the river (8.0 - 9.4s)
+tl.addLabel("sink", 8.0)
+  .to("#badgeMove", { y: 660, duration: 1.35, ease: "power1.in" }, "sink")
+  .to("#badgeMove", { autoAlpha: 0, duration: 0.32, ease: "sine.in" }, "sink+=1.0");
+
+// ---- beat 6: the brown tide inversion (9.6 - 10.5s)
+tl.addLabel("tideUp", 9.6)
   .to("#tide", { y: -85, duration: 0.9, ease: "power2.inOut" }, "tideUp")
   .to("body", { backgroundColor: "#8C5E2E", duration: 0.7, ease: "sine.inOut" }, "tideUp+=0.25");
 
-// ---- beat 5: wordmark rises alone, centered (6.5 - 8.3s)
-tl.addLabel("type", 6.7)
+// ---- beat 7: wordmark rises alone, centered (10.9 - 12.6s)
+tl.addLabel("type", 10.9)
   .to("#wmButter", { autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }, "type")
   .to("#wmSticks", { autoAlpha: 1, y: 0, duration: 1.6, ease: "sine.out" }, "type+=0.15")
   .to(".golfLetter", { autoAlpha: 1, y: 0, duration: 1.2, ease: "sine.out", stagger: 0.1 }, "type+=0.45");
 
-// ---- beat 6: breathing hold (8.5 - 9.4s)
-tl.to({}, { duration: 0.1 }, 9.7);  // quiet hold to the end
+// quiet hold to the end
+tl.to({}, { duration: 0.1 }, 13.0);
 
-// slow camera push, whole film
-tl.to("svg", { scale: 1.0, duration: 5.5, ease: "sine.out" }, 0);
+// slow camera push through the melt
+tl.to("svg", { scale: 1.0, duration: 7.5, ease: "sine.out" }, 0);
 
 // reduced motion: land on the finished lockup immediately
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
