@@ -134,7 +134,7 @@ html = f"""<!doctype html>
       <g id="moltenRim" filter="url(#gooRim)">{molten_members("r")}</g>
       <g id="moltenGold" filter="url(#goo)" fill="{GOLDEN}">{molten_members("g")}</g>
       <g id="staticB">{paths("tee")}</g>
-      <g id="bsg" filter="url(#lettersMelt)">{paths("bsg")}</g>
+      <g id="bsg" filter="url(#lettersMelt)">{paths("bsg", cls="bsgL")}</g>
       <g id="speed">{paths("speed")}</g>
     </g>
   </g>
@@ -178,21 +178,23 @@ tl.addLabel("in", 0.15)
 tl.addLabel("melt", 1.6)
   .to("#speed", {{ autoAlpha: 0, duration: 0.4 }}, "melt")
   // the outline melts into the mass: rim thins as everything liquefies
-  .to("#rimDilate", {{ attr: {{ radius: 4.5 }}, duration: 2.9, ease: "sine.inOut" }}, "melt+=0.3")
+  .to("#rimDilate", {{ attr: {{ radius: 3 }}, duration: 2.6, ease: "sine.inOut" }}, "melt+=0.3")
   // the real pat art slumps downward into the flow
   .to(".rPatArt, .gPatArt", {{ scaleY: 0.24, transformOrigin: "50% 100%",
       duration: 1.8, ease: "power1.inOut" }}, "melt+=0.2")
-  .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.8, ease: "power1.inOut" }}, "melt+=0.2")
+  .to(".rPatArt", {{ opacity: 0, duration: 1.6, ease: "sine.in" }}, "melt+=0.5")
+  .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.6, ease: "power1.out" }}, "melt+=0.05")
   // butter coats the ball's crown, hugging the surface
   .to("#coatWave", {{ y: 0, duration: 1.9, ease: "power1.inOut" }}, "melt+=0.4")
   .to(".rRun, .gRun", {{ autoAlpha: 1, duration: 0.4, stagger: 0.15 }}, "melt+=0.3")
   .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
-  // BSG melts with the butter: sags and stretches downward...
-  .to("#bsg", {{ scaleY: 1.9, y: 55, transformOrigin: "50% 0%", duration: 1.6, ease: "power1.in" }}, "melt+=0.5")
-  .to("#dispMap", {{ attr: {{ scale: 20 }}, duration: 1.2, ease: "sine.in" }}, "melt+=0.5")
-  // ...smearing into liquid streaks and evaporating as it goes
-  .to("#bsgBlur", {{ attr: {{ stdDeviation: "0 16" }}, duration: 1.2, ease: "sine.in" }}, "melt+=0.8")
-  .to("#bsg", {{ autoAlpha: 0, duration: 1.0, ease: "sine.inOut" }}, "melt+=1.05");
+  // BSG melts letter by letter: stretches, sinks, turns to butter, dissolves
+  .to(".bsgL", {{ scaleY: 2.3, y: 70, transformOrigin: "50% 0%", duration: 1.7,
+      ease: "power1.in", stagger: 0.14 }}, "melt+=0.45")
+  .to(".bsgL", {{ fill: "{GOLDEN}", duration: 1.0, ease: "sine.in", stagger: 0.14 }}, "melt+=0.65")
+  .to(".bsgL", {{ autoAlpha: 0, duration: 0.85, ease: "sine.inOut", stagger: 0.14 }}, "melt+=1.15")
+  .to("#dispMap", {{ attr: {{ scale: 26 }}, duration: 1.3, ease: "sine.in" }}, "melt+=0.5")
+  .to("#bsgBlur", {{ attr: {{ stdDeviation: "0 19" }}, duration: 1.2, ease: "sine.in" }}, "melt+=0.7");
 
 // runnels slide down the ball as the coat spreads
 $$(".rRun, .gRun").forEach((r) => {{
