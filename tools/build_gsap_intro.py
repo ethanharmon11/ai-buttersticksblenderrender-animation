@@ -71,7 +71,7 @@ html = f"""<!doctype html>
 </head>
 <body>
 <div class="stage">
-<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Butter Sticks Golf intro animation">
+<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-label="Butter Sticks Golf intro animation">
   <defs>
     <filter id="goo" x="-30%" y="-30%" width="160%" height="160%">
       <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/>
@@ -82,7 +82,7 @@ html = f"""<!doctype html>
       <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/>
       <feColorMatrix in="b" mode="matrix"
         values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="thresh"/>
-      <feMorphology in="thresh" operator="dilate" radius="10" result="fat"/>
+      <feMorphology id="rimDilate" in="thresh" operator="dilate" radius="9" result="fat"/>
       <feFlood flood-color="{GREEN}"/>
       <feComposite operator="in" in2="fat"/>
     </filter>
@@ -98,7 +98,9 @@ html = f"""<!doctype html>
     <clipPath id="eraserClip">
       <rect id="eraserRect" x="1520" y="740" width="440" height="0"/>
     </clipPath>
+    <clipPath id="sceneClip"><rect x="0" y="0" width="1600" height="900"/></clipPath>
   </defs>
+  <g clip-path="url(#sceneClip)">
 
   <rect id="bg" width="1600" height="900" fill="{CREAM}"/>
 
@@ -143,6 +145,7 @@ html = f"""<!doctype html>
     <g id="wmSticks">{paths("wm_sticks", keep_fill=False)}</g>
     <g id="wmGolf">{paths("wm_golf", keep_fill=False, cls="golfLetter")}</g>
   </g>
+  </g>
 </svg>
 </div>
 
@@ -174,6 +177,8 @@ tl.addLabel("in", 0.15)
 // ---- beat 2: the pat melts in place (1.6 - 3.4s)
 tl.addLabel("melt", 1.6)
   .to("#speed", {{ autoAlpha: 0, duration: 0.4 }}, "melt")
+  // the outline melts into the mass: rim thins as everything liquefies
+  .to("#rimDilate", {{ attr: {{ radius: 4.5 }}, duration: 2.9, ease: "sine.inOut" }}, "melt+=0.3")
   // the real pat art slumps downward into the flow
   .to(".rPatArt, .gPatArt", {{ scaleY: 0.24, transformOrigin: "50% 100%",
       duration: 1.8, ease: "power1.inOut" }}, "melt+=0.2")
@@ -227,7 +232,8 @@ $$(".drop").forEach((d, i) => {{
 
 // ---- beat 4: the brown tide inversion (5.3 - 6.2s)
 tl.addLabel("tideUp", 5.3)
-  .to("#tide", {{ y: -85, duration: 0.9, ease: "power2.inOut" }}, "tideUp");
+  .to("#tide", {{ y: -85, duration: 0.9, ease: "power2.inOut" }}, "tideUp")
+  .to("body", {{ backgroundColor: "{BROWN}", duration: 0.7, ease: "sine.inOut" }}, "tideUp+=0.25");
 
 // ---- beat 5: wordmark rises alone, centered (6.5 - 8.3s)
 tl.addLabel("type", 6.7)
@@ -246,6 +252,7 @@ tl.to("svg", {{ scale: 1.0, duration: 9.8, ease: "sine.out" }}, 0);
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {{
   tl.progress(1).pause();
   gsap.set("#tide", {{ y: -85 }});
+  gsap.set("body", {{ backgroundColor: "{BROWN}" }});
 }}
 
 // headless frame-grab support: ?seek=<seconds>

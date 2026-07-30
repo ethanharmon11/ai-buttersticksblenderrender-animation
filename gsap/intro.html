@@ -12,7 +12,7 @@
 </head>
 <body>
 <div class="stage">
-<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Butter Sticks Golf intro animation">
+<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-label="Butter Sticks Golf intro animation">
   <defs>
     <filter id="goo" x="-30%" y="-30%" width="160%" height="160%">
       <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/>
@@ -23,7 +23,7 @@
       <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/>
       <feColorMatrix in="b" mode="matrix"
         values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="thresh"/>
-      <feMorphology in="thresh" operator="dilate" radius="10" result="fat"/>
+      <feMorphology id="rimDilate" in="thresh" operator="dilate" radius="9" result="fat"/>
       <feFlood flood-color="#21522a"/>
       <feComposite operator="in" in2="fat"/>
     </filter>
@@ -39,7 +39,9 @@
     <clipPath id="eraserClip">
       <rect id="eraserRect" x="1520" y="740" width="440" height="0"/>
     </clipPath>
+    <clipPath id="sceneClip"><rect x="0" y="0" width="1600" height="900"/></clipPath>
   </defs>
+  <g clip-path="url(#sceneClip)">
 
   <rect id="bg" width="1600" height="900" fill="#EADDC1"/>
 
@@ -141,6 +143,7 @@
 <path d="M 664.9526,627.6091000000001 C 678.5206,627.6151000000001 692.5156,627.7242000000001 706.1012,627.6930000000001 C 706.4133,627.6925000000001 706.6672,627.4371000000001 706.6667,627.1250000000001 L 706.6463,616.0922000000002 C 706.6457,615.7807000000001 706.392,615.5270000000002 706.0805,615.5264000000001 L 678.0906,615.4658000000001 C 677.1424,615.4635000000001 677.1084,615.3521000000001 677.111,614.8507000000001 C 677.192,603.2992000000002 677.1268,582.2647000000001 677.0767,563.3349000000001 C 677.0758,563.0217000000001 676.8201,562.7669000000001 676.5069,562.7669000000001 L 664.4684,562.7669000000001 C 664.1566,562.7669000000001 663.9021,563.0211000000002 663.9015,563.3330000000001 L 663.8193,626.4738000000001 C 663.8185,627.0986000000001 664.3278,627.6088000000001 664.9526,627.6091000000001" fill-rule="evenodd" class="golfLetter"/>
 <path d="M 741.7528,627.1286000000001 L 741.8211,603.0455000000001 C 741.8228,602.4202000000001 742.3339,601.9114000000001 742.9592,601.9122000000001 L 767.1189,601.9462000000001 C 767.2762,601.9465000000001 767.4117,601.8904000000001 767.5228,601.7793000000001 C 767.634,601.6681000000001 767.6898,601.5326000000001 767.6895,601.3753000000002 L 767.6688,590.3307000000001 C 767.6683,590.0172000000001 767.4126,589.7621000000001 767.0991,589.7621000000001 C 760.6885,589.7655000000001 749.7595,589.8270000000001 743.11,589.8032000000001 C 742.7962,589.8020000000001 742.5266,589.6886000000001 742.3058,589.4656000000001 C 742.0853,589.2422000000001 741.975,588.9712000000001 741.9776,588.6574000000002 C 742.0272,582.3767000000001 742.0263,582.0221000000001 742.0496,576.8483000000001 C 742.0521,576.2232000000001 742.5632,575.7155000000001 743.1883,575.7167000000001 L 769.0972,575.7609000000001 C 769.2542,575.7612000000001 769.3894,575.7053000000001 769.5006,575.5942000000001 C 769.6117,575.4834000000001 769.6678,575.3482000000001 769.6678,575.1911000000001 L 769.6678,563.3315000000001 C 769.6678,563.0177000000001 769.4118,562.7618000000001 769.098,562.7618000000001 L 729.3249,562.7618000000001 C 729.0113,562.7618000000001 728.7554,563.0175000000002 728.7551,563.3310000000001 L 728.6859,627.1731000000001 C 728.6856,627.3305000000001 728.742,627.4660000000001 728.8534,627.5771000000001 C 728.9649,627.6882000000002 729.1006,627.7440000000001 729.258,627.7435000000002 L 741.1853,627.6967000000001 C 741.4977,627.6953000000001 741.7519,627.4410000000001 741.7528,627.1286000000001" fill-rule="evenodd" class="golfLetter"/></g>
   </g>
+  </g>
 </svg>
 </div>
 
@@ -183,6 +186,8 @@ tl.addLabel("in", 0.15)
 // ---- beat 2: the pat melts in place (1.6 - 3.4s)
 tl.addLabel("melt", 1.6)
   .to("#speed", { autoAlpha: 0, duration: 0.4 }, "melt")
+  // the outline melts into the mass: rim thins as everything liquefies
+  .to("#rimDilate", { attr: { radius: 4.5 }, duration: 2.9, ease: "sine.inOut" }, "melt+=0.3")
   // the real pat art slumps downward into the flow
   .to(".rPatArt, .gPatArt", { scaleY: 0.24, transformOrigin: "50% 100%",
       duration: 1.8, ease: "power1.inOut" }, "melt+=0.2")
@@ -236,7 +241,8 @@ $$(".drop").forEach((d, i) => {
 
 // ---- beat 4: the brown tide inversion (5.3 - 6.2s)
 tl.addLabel("tideUp", 5.3)
-  .to("#tide", { y: -85, duration: 0.9, ease: "power2.inOut" }, "tideUp");
+  .to("#tide", { y: -85, duration: 0.9, ease: "power2.inOut" }, "tideUp")
+  .to("body", { backgroundColor: "#8C5E2E", duration: 0.7, ease: "sine.inOut" }, "tideUp+=0.25");
 
 // ---- beat 5: wordmark rises alone, centered (6.5 - 8.3s)
 tl.addLabel("type", 6.7)
@@ -255,6 +261,7 @@ tl.to("svg", { scale: 1.0, duration: 9.8, ease: "sine.out" }, 0);
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   tl.progress(1).pause();
   gsap.set("#tide", { y: -85 });
+  gsap.set("body", { backgroundColor: "#8C5E2E" });
 }
 
 // headless frame-grab support: ?seek=<seconds>
