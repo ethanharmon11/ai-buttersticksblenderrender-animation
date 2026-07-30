@@ -89,7 +89,8 @@ html = f"""<!doctype html>
     <filter id="lettersMelt" x="-40%" y="-40%" width="180%" height="180%">
       <feTurbulence type="turbulence" baseFrequency="0.012 0.03" numOctaves="2" result="n"/>
       <feDisplacementMap id="dispMap" in="SourceGraphic" in2="n" scale="0"
-        xChannelSelector="R" yChannelSelector="G"/>
+        xChannelSelector="R" yChannelSelector="G" result="disp"/>
+      <feGaussianBlur id="bsgBlur" in="disp" stdDeviation="0 0"/>
     </filter>
     <clipPath id="coatClip">
       <path id="coatWave" d="M1520 600 H1968 V1062 q-37 24 -75 0 t-75 0 t-75 0 t-75 0 t-74 0 t-74 0 Z"/>
@@ -137,7 +138,7 @@ html = f"""<!doctype html>
   </g>
 
   <!-- wordmark: the sole hero of the final act, centered -->
-  <g id="wmMove" transform="translate(493.3,275) scale(0.48)" fill="{CREAM}">
+  <g id="wmMove" transform="translate(518.8,280.3) scale(0.44)" fill="{CREAM}">
     <g id="wmButter">{paths("wm_butter", keep_fill=False)}</g>
     <g id="wmSticks">{paths("wm_sticks", keep_fill=False)}</g>
     <g id="wmGolf">{paths("wm_golf", keep_fill=False, cls="golfLetter")}</g>
@@ -150,8 +151,8 @@ html = f"""<!doctype html>
 const $$ = (s) => gsap.utils.toArray(s);
 
 gsap.set("#badgeMove", {{ autoAlpha: 0, scale: 0.92, transformOrigin: "50% 50%" }});
-gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 150 }});
-gsap.set(".golfLetter", {{ autoAlpha: 0, y: 70 }});
+gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 85 }});
+gsap.set(".golfLetter", {{ autoAlpha: 0, y: 45 }});
 gsap.set(".drop", {{ autoAlpha: 0 }});
 gsap.set("#coatWave", {{ y: -185 }});
 gsap.set(["#pondBack", "#pondFront", "#tide"], {{ y: 920 }});
@@ -167,11 +168,8 @@ const tl = gsap.timeline({{ defaults: {{ ease: "power2.out" }} }});
 
 // ---- beat 1: arrival on cream (0 - 1.4s)
 tl.addLabel("in", 0.15)
-  .to("#badgeMove", {{ autoAlpha: 1, duration: 0.55, ease: "sine.out" }}, "in")
-  .to("#badgeMove", {{ scale: 1.04, duration: 0.75, ease: "back.out(1.4)" }}, "in")
-  .to("#badgeMove", {{ scale: 1.0, duration: 0.4 }}, "in+=0.78")
-  .to("#badgeMove", {{ scaleY: 0.965, scaleX: 1.03, duration: 0.25, ease: "sine.inOut" }}, 1.3)
-  .to("#badgeMove", {{ scaleY: 1, scaleX: 1, duration: 0.3, ease: "sine.out" }}, 1.56);
+  .to("#badgeMove", {{ autoAlpha: 1, duration: 0.7, ease: "sine.out" }}, "in")
+  .to("#badgeMove", {{ scale: 1.0, duration: 1.2, ease: "sine.out" }}, "in");
 
 // ---- beat 2: the pat melts in place (1.6 - 3.4s)
 tl.addLabel("melt", 1.6)
@@ -184,9 +182,12 @@ tl.addLabel("melt", 1.6)
   .to("#coatWave", {{ y: 0, duration: 1.9, ease: "power1.inOut" }}, "melt+=0.4")
   .to(".rRun, .gRun", {{ autoAlpha: 1, duration: 0.4, stagger: 0.15 }}, "melt+=0.3")
   .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
-  // BSG stays put, liquefies, dissolves
-  .to("#dispMap", {{ attr: {{ scale: 42 }}, duration: 1.0, ease: "sine.in" }}, "melt+=0.8")
-  .to("#bsg", {{ autoAlpha: 0, duration: 0.7, ease: "sine.inOut" }}, "melt+=1.2");
+  // BSG melts with the butter: sags and stretches downward...
+  .to("#bsg", {{ scaleY: 1.9, y: 55, transformOrigin: "50% 0%", duration: 1.6, ease: "power1.in" }}, "melt+=0.5")
+  .to("#dispMap", {{ attr: {{ scale: 20 }}, duration: 1.2, ease: "sine.in" }}, "melt+=0.5")
+  // ...smearing into liquid streaks and evaporating as it goes
+  .to("#bsgBlur", {{ attr: {{ stdDeviation: "0 16" }}, duration: 1.2, ease: "sine.in" }}, "melt+=0.8")
+  .to("#bsg", {{ autoAlpha: 0, duration: 1.0, ease: "sine.inOut" }}, "melt+=1.05");
 
 // runnels slide down the ball as the coat spreads
 $$(".rRun, .gRun").forEach((r) => {{
@@ -229,17 +230,17 @@ tl.addLabel("tideUp", 5.3)
   .to("#tide", {{ y: -85, duration: 0.9, ease: "power2.inOut" }}, "tideUp");
 
 // ---- beat 5: wordmark rises alone, centered (6.5 - 8.3s)
-tl.addLabel("type", 6.5)
-  .to("#wmButter", {{ autoAlpha: 1, y: 0, duration: 0.65, ease: "power3.out" }}, "type")
-  .to("#wmSticks", {{ autoAlpha: 1, y: 0, duration: 0.65, ease: "power3.out" }}, "type+=0.26")
-  .to(".golfLetter", {{ autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out", stagger: 0.12 }}, "type+=0.66");
+tl.addLabel("type", 6.7)
+  .to("#wmButter", {{ autoAlpha: 1, y: 0, duration: 1.35, ease: "sine.out" }}, "type")
+  .to("#wmSticks", {{ autoAlpha: 1, y: 0, duration: 1.35, ease: "sine.out" }}, "type+=0.18")
+  .to(".golfLetter", {{ autoAlpha: 1, y: 0, duration: 1.0, ease: "sine.out", stagger: 0.09 }}, "type+=0.5");
 
 // ---- beat 6: breathing hold (8.5 - 9.4s)
-tl.to("#wmMove", {{ scale: 1.012, transformOrigin: "50% 50%", duration: 0.4, ease: "sine.inOut" }}, 8.5)
-  .to("#wmMove", {{ scale: 1.0, duration: 0.4, ease: "sine.inOut" }}, 8.9);
+tl.to("#wmMove", {{ scale: 1.007, transformOrigin: "50% 50%", duration: 0.5, ease: "sine.inOut" }}, 8.8)
+  .to("#wmMove", {{ scale: 1.0, duration: 0.5, ease: "sine.inOut" }}, 9.3);
 
 // slow camera push, whole film
-tl.to("svg", {{ scale: 1.0, duration: 9.4, ease: "sine.out" }}, 0);
+tl.to("svg", {{ scale: 1.0, duration: 9.8, ease: "sine.out" }}, 0);
 
 // reduced motion: land on the finished lockup immediately
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {{
