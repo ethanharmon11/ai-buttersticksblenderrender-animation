@@ -57,6 +57,8 @@ html = f"""<!doctype html>
 <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-label="Butter Sticks Golf intro: a putt rolls into the hole">
   <rect id="bg" width="1600" height="900" fill="{CREAM}"/>
 
+  <defs><clipPath id="aboveGround"><rect x="0" y="0" width="1600" height="570"/></clipPath></defs>
+
   <!-- ACT 1: the putting green -->
   <g id="scene">
     <!-- green line, in two strokes leaving the cup gap -->
@@ -73,16 +75,14 @@ html = f"""<!doctype html>
     <!-- flag -->
     <path id="pole" class="ln" stroke-width="6" d="M1152 552 V 336"/>
     <path id="flag" d="M1152 336 L1228 362 L1152 388 Z" fill="{RUST}"/>
-    <!-- the ball (rolls) -->
-    <g id="ball">
+    <!-- the ball (rolls); clipped so it sinks into the cup -->
+    <g clip-path="url(#aboveGround)"><g id="ball">
       <circle cx="0" cy="0" r="26" fill="{CREAM}" stroke="{GREEN}" stroke-width="6"/>
       <g id="ballSpin" fill="{GREEN}">
         <circle cx="-9" cy="-4" r="2.6"/><circle cx="8" cy="-7" r="2.6"/>
         <circle cx="2" cy="9" r="2.6"/>
       </g>
-    </g>
-    <!-- cup front lip covers the ball as it drops -->
-    <path id="cupLip" d="M1124 559 A28 9 0 0 0 1180 559 L1180 585 L1124 585 Z" fill="{CREAM}" stroke="none"/>
+    </g></g>
     <ellipse id="cupRing" cx="1152" cy="560" rx="28" ry="9" fill="none" stroke="{GREEN}" stroke-width="6"/>
     <!-- the putter -->
     <g id="putter">
@@ -181,7 +181,7 @@ tl.addLabel("roll", 2.49)
 // ---- plunge into the hole (4.5 - 5.4s)
 tl.addLabel("plunge", 4.5)
   .to("#scene", {{ scale: 26, duration: 0.95, ease: "power2.in" }}, "plunge")
-  .to(["#cupLip", "#cupRing", "#pole", "#flag", "#putter"], {{ autoAlpha: 0, duration: 0.3,
+  .to(["#cupRing", "#pole", "#flag", "#putter"], {{ autoAlpha: 0, duration: 0.3,
       ease: "sine.in" }}, "plunge+=0.3")
   .to("#bg", {{ attr: {{ fill: "{HOLE_DARK}" }}, duration: 0.3, ease: "none" }}, "plunge+=0.75")
   .to("body", {{ backgroundColor: "{INSIDE}", duration: 0.3, ease: "none" }}, "plunge+=0.75")
