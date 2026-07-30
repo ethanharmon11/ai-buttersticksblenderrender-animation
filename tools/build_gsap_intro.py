@@ -51,6 +51,10 @@ def molten_members(cls):
                     f'rx="{28 + (i % 3) * 5}" ry="34" data-drift="{drift}"/>\n')
     return f"""
     <g class="{cls}PatArt">{paths("gold", keep_fill=False)}</g>
+    <g clip-path="url(#ringClip)">
+      <circle class="{cls}Ring" cx="{BALL_CX}" cy="{BALL_CY}" r="{BALL_R - 2}"
+        fill="none" stroke="{GOLDEN}" stroke-width="30"/>
+    </g>
     <g clip-path="url(#coatClip)">
       <ellipse class="{cls}Coat" cx="{BALL_CX}" cy="{BALL_CY}" rx="{BALL_R + 4}" ry="{BALL_R + 4}"/>
     </g>
@@ -95,6 +99,9 @@ html = f"""<!doctype html>
     <clipPath id="coatClip">
       <path id="coatWave" d="M1520 400 H1968 V1240 Q1934 1264 1898 1248 L1832 1162 Q1788 1110 1744 1078 Q1700 1110 1656 1162 L1590 1248 Q1554 1264 1520 1240 Z"/>
     </clipPath>
+    <clipPath id="ringClip">
+      <rect id="ringRect" x="1520" y="898" width="448" height="0"/>
+    </clipPath>
     <clipPath id="eraserClip">
       <rect id="eraserRect" x="1520" y="740" width="440" height="0"/>
     </clipPath>
@@ -125,6 +132,7 @@ html = f"""<!doctype html>
         {paths("ball")}
         {paths("dimples_cream")}
         {paths("dimples_green")}
+        {paths("tee")}
         <g id="hornCover" fill="{CREAM}" opacity="0">
           <rect x="1872" y="876" width="92" height="104" rx="14"/>
           <rect x="1522" y="886" width="84" height="90" rx="14"/>
@@ -133,7 +141,6 @@ html = f"""<!doctype html>
       <!-- the molten butter: real art in the goo from frame one -->
       <g id="moltenRim" filter="url(#gooRim)">{molten_members("r")}</g>
       <g id="moltenGold" filter="url(#goo)" fill="{GOLDEN}">{molten_members("g")}</g>
-      <g id="staticB">{paths("tee")}</g>
       <g id="bsg" filter="url(#lettersMelt)">{paths("bsg", cls="bsgL")}</g>
       <g id="speed">{paths("speed")}</g>
     </g>
@@ -185,6 +192,8 @@ tl.addLabel("melt", 1.6)
   .to(".rPatArt", {{ opacity: 0, duration: 1.6, ease: "sine.in" }}, "melt+=0.5")
   .to("#eraserRect", {{ attr: {{ height: 300 }}, duration: 1.6, ease: "power1.out" }}, "melt+=0.05")
   // butter coats the ball's crown, hugging the surface
+  .to("#ringRect", {{ attr: {{ height: 430 }}, duration: 0.85, ease: "power1.inOut" }}, "melt+=0.45")
+  .to(".rRing, .gRing", {{ autoAlpha: 0, duration: 0.5, ease: "sine.inOut" }}, "melt+=2.7")
   .to("#coatWave", {{ y: 255, duration: 2.5, ease: "power1.inOut" }}, "melt+=0.4")
   .to(".rRun, .gRun", {{ autoAlpha: 1, duration: 0.4, stagger: 0.15 }}, "melt+=0.3")
   .to("#hornCover", {{ opacity: 1, duration: 0.5, ease: "sine.inOut" }}, "melt+=0.9")
@@ -212,7 +221,7 @@ tl.addLabel("consume", 3.3)
   .to("#pondBack", {{ y: 585, duration: 1.3, ease: "power1.inOut" }}, "consume+=0.1")
   .to("#pondFront", {{ y: 606, duration: 1.3, ease: "power1.inOut" }}, "consume+=0.22")
   // everything solid fades beneath the gold (invisible handoff)
-  .to(["#staticA", "#staticB"], {{ autoAlpha: 0, duration: 0.55, ease: "sine.inOut" }}, "consume+=0.55")
+  .to("#staticA", {{ autoAlpha: 0, duration: 0.38, ease: "sine.inOut" }}, "consume+=0.78")
   .to(".rPatArt, .gPatArt", {{ autoAlpha: 0, duration: 0.4 }}, "consume+=0.7")
   // ...and the whole molten mass slumps off the tee into the river
   .to(".rCoat, .gCoat", {{ attr: {{ cy: "+=300", ry: 96, rx: 238 }},
