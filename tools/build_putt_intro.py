@@ -22,6 +22,8 @@ RUST = "#B15023"
 HOLE_DARK = "#2B1A0D"
 INSIDE = "#3A2410"
 GOLDEN = "#D9B64E"
+SILVER = "#B9B6AC"
+BROWN = "#8C5E2E"
 
 
 def paths(group, keep_fill=True, cls=""):
@@ -79,16 +81,19 @@ html = f"""<!doctype html>
     <g clip-path="url(#aboveGround)"><g id="ball">
       <circle cx="0" cy="0" r="26" fill="{CREAM}" stroke="{GREEN}" stroke-width="6"/>
       <g id="ballSpin" fill="{GREEN}">
+        <circle r="12" fill="none" stroke="none"/>
         <circle cx="-9" cy="-4" r="2.6"/><circle cx="8" cy="-7" r="2.6"/>
         <circle cx="2" cy="9" r="2.6"/>
       </g>
     </g></g>
     <ellipse id="cupRing" cx="1152" cy="560" rx="28" ry="9" fill="none" stroke="{GREEN}" stroke-width="6"/>
-    <!-- the putter -->
+    <!-- the putter: brown grip, silver shaft, bladed head -->
     <g id="putter">
-      <path class="ln" stroke-width="8" d="M404 214 L462 520"/>
-      <path class="ln" stroke-width="8" d="M398 200 L410 262"/>
-      <path class="ln" stroke-width="9" d="M446 530 Q470 546 502 540"/>
+      <path d="M404 272 L452 528" stroke="{SILVER}" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <path d="M388 188 L406 280" stroke="{BROWN}" stroke-width="17" stroke-linecap="round" fill="none"/>
+      <path d="M391 210 l16 3 M394 228 l16 3 M397 246 l15 3" stroke="#6E4A24" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M441 524 q-9 3 -9 13 v3 q0 10 10 10 h55 q10 0 10 -10 v-4 q0 -10 -10 -10 l-40 -4 z"
+            fill="{SILVER}" stroke="{GREEN}" stroke-width="5" stroke-linejoin="round"/>
     </g>
     <!-- tap tick marks -->
     <g id="tick" class="ln" stroke-width="5" opacity="0">
@@ -193,11 +198,11 @@ gsap.utils.toArray(drawables.join(",")).forEach((p) => {{
   gsap.set(p, {{ strokeDasharray: len, strokeDashoffset: len }});
 }});
 gsap.set("#ball", {{ x: BALL_START, y: 528, transformOrigin: "0px 0px" }});
-gsap.set("#ballSpin", {{ rotation: 0, transformOrigin: "0px 0px" }});
-gsap.set("#putter", {{ rotation: 0, transformOrigin: "404px 214px", x: 0 }});
-gsap.set("#flag", {{ transformOrigin: "1152px 336px", scaleX: 0 }});
+gsap.set("#ballSpin", {{ rotation: 0, transformOrigin: "12px 12px" }});
+gsap.set("#putter", {{ rotation: 0, svgOrigin: "472 128", x: 0 }});
+gsap.set("#flag", {{ svgOrigin: "1152 336", scaleX: 0 }});
 gsap.set(["#cupMouth"], {{ autoAlpha: 0 }});
-gsap.set("#scene", {{ transformOrigin: "{1152}px {560}px" }});
+gsap.set("#scene", {{ svgOrigin: "1152 560" }});
 gsap.set("#bigBall", {{ y: -650 }});
 gsap.set(["#wmButter", "#wmSticks"], {{ autoAlpha: 0, y: 46 }});
 gsap.set(".golfLetter", {{ autoAlpha: 0, y: 28 }});
@@ -215,13 +220,18 @@ tl.addLabel("draw", 0.15)
   .from("#putter", {{ x: -160, autoAlpha: 0, duration: 0.5 }}, "draw+=0.6")
   .from("#ball", {{ autoAlpha: 0, scale: 0, duration: 0.35, ease: "back.out(2)" }}, "draw+=0.9");
 
-// ---- the putt (1.8 - 2.2s)
+// ---- address waggle, then the putt (1.3 - 2.2s)
+tl.addLabel("waggle", 1.25)
+  .to("#putter", {{ rotation: 2.6, duration: 0.16, ease: "sine.inOut" }}, "waggle")
+  .to("#putter", {{ rotation: -2.2, duration: 0.2, ease: "sine.inOut" }}, "waggle+=0.16")
+  .to("#putter", {{ rotation: 0, duration: 0.16, ease: "sine.out" }}, "waggle+=0.36");
+
 tl.addLabel("putt", 1.8)
-  .to("#putter", {{ rotation: -14, duration: 0.45, ease: "power1.inOut" }}, "putt")
-  .to("#putter", {{ rotation: 7, duration: 0.14, ease: "power3.in" }}, "putt+=0.55")
+  .to("#putter", {{ rotation: 8, y: -14, x: -20, duration: 0.45, ease: "power1.inOut" }}, "putt")
+  .to("#putter", {{ rotation: -4, y: 0, x: 0, duration: 0.14, ease: "power3.in" }}, "putt+=0.55")
   .to("#tick", {{ opacity: 1, duration: 0.05 }}, "putt+=0.66")
   .to("#tick", {{ opacity: 0, duration: 0.25 }}, "putt+=0.78")
-  .to("#putter", {{ rotation: 3, duration: 0.4, ease: "sine.out" }}, "putt+=0.69");
+  .to("#putter", {{ rotation: -2, y: -4, x: 6, duration: 0.4, ease: "sine.out" }}, "putt+=0.69");
 
 // ---- the roll: no-slip rotation, decelerating (2.5 - 4.4s)
 tl.addLabel("roll", 2.49)
