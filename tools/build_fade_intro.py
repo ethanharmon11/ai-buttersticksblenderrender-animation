@@ -90,24 +90,33 @@ def build(colored, lining_opacity):
       <g transform="translate(18,14) {M}">{motif(colored)}</g>
       <g transform="translate({18 + TW // 2},{14 + TH // 2}) {M}">{motif(colored)}</g>
     </pattern>
-    <filter id="focus" x="-20%" y="-20%" width="140%" height="140%">
+    <!-- Fixed region in user space: an auto-sized (bbox-relative) filter
+         re-rasterizes as the mark scales and the blur resolves, and the
+         letterforms visibly shimmer. These bounds are a fallback — the
+         script measures the mark and pins the region to it exactly. -->
+    <filter id="focus" filterUnits="userSpaceOnUse"
+            x="360" y="130" width="880" height="620">
       <feGaussianBlur id="focusBlur" stdDeviation="0"/>
     </filter>
   </defs>
 
   <rect width="1600" height="900" fill="{CREAM}"/>
-  <!-- the lining: oversized so it can drift, washed back -->
-  <g id="liningDrift">
+  <!-- the lining, washed back. Deliberately static: a slow drift makes a
+       repeating pattern crawl at the sub-pixel level, and the eye reads
+       that shimmer as the wordmark shaking. -->
+  <g id="lining">
     <rect x="-300" y="-320" width="2300" height="1600" fill="url(#lining)"
           opacity="{lining_opacity}"/>
   </g>
 
-  <!-- wordmark centered on top, copper brown -->
-  <g id="wordmark" transform="translate(538.0,291.8) scale(0.41)" fill="{BROWN}"
-     filter="url(#focus)">
-    <g id="wmButter">{paths("wm_butter", fill=BROWN)}</g>
-    <g id="wmSticks">{paths("wm_sticks", fill=BROWN)}</g>
-    <g id="wmGolf">{paths("wm_golf", fill=BROWN, cls="golfLetter")}</g>
+  <!-- wordmark centered on top, copper brown. The filter sits on an
+       untransformed wrapper so its region stays put while the mark settles. -->
+  <g id="focusWrap" filter="url(#focus)">
+    <g id="wordmark" transform="translate(538.0,291.8) scale(0.41)" fill="{BROWN}">
+      <g id="wmButter">{paths("wm_butter", fill=BROWN)}</g>
+      <g id="wmSticks">{paths("wm_sticks", fill=BROWN)}</g>
+      <g id="wmGolf">{paths("wm_golf", fill=BROWN, cls="golfLetter")}</g>
+    </g>
   </g>
 </svg>
 </div>
@@ -120,31 +129,54 @@ const focusBlur = document.getElementById("focusBlur");
 const blur = {{ v: 6 }};
 
 gsap.set("#wordmark", {{ autoAlpha: 0, scale: 1.025, svgOrigin: "800 450" }});
-gsap.set("#liningDrift", {{ autoAlpha: 0 }});
+gsap.set("#lining", {{ autoAlpha: 0 }});
+
+// Pin the filter region to the mark's real bounds, measured after GSAP has
+// applied its transform (it overrides the markup's scale, so the rendered
+// size is not what the markup alone implies). Too small a region clips the
+// letterforms; too large wastes raster. Measured at the 1.025 start scale,
+// which is the mark at its widest.
+(() => {{
+  const wrap = document.getElementById("focusWrap");
+  if (!wrap.getBBox) return;
+  const b = wrap.getBBox();
+  if (!b.width || !b.height) return;
+  const pad = 40;                       // 6-unit blur spreads ~18
+  const f = document.getElementById("focus");
+  f.setAttribute("x", (b.x - pad).toFixed(1));
+  f.setAttribute("y", (b.y - pad).toFixed(1));
+  f.setAttribute("width", (b.width + pad * 2).toFixed(1));
+  f.setAttribute("height", (b.height + pad * 2).toFixed(1));
+}})();
 
 const tl = gsap.timeline({{ defaults: {{ ease: "sine.inOut" }} }});
 
 // the lining surfaces first, like opening the box
-tl.to("#liningDrift", {{ autoAlpha: 1, duration: 1.4, ease: "sine.out" }}, 0.15)
-  .to("#liningDrift", {{ x: 34, y: 24, duration: 9, ease: "none" }}, 0);
+tl.set("#focusWrap", {{ attr: {{ filter: "url(#focus)" }} }}, 0)
+  .to("#lining", {{ autoAlpha: 1, duration: 1.4, ease: "sine.out" }}, 0.15);
 
-// the wordmark breathes in: opacity + focus resolve + 2% settle
+// the wordmark breathes in: opacity + focus resolve + 2% settle.
+// The settle finishes before the hold so the held frame is perfectly
+// still — continuous sub-pixel scaling shimmers the letterform edges.
 tl.addLabel("in", 0.55)
   .to("#wordmark", {{ autoAlpha: 1, duration: 1.6 }}, "in")
-  .to("#wordmark", {{ scale: 1.0, duration: 2.2, ease: "power2.out" }}, "in")
+  .to("#wordmark", {{ scale: 1.0, duration: 1.55, ease: "power2.out" }}, "in")
   .to(blur, {{ v: 0, duration: 1.3, ease: "power2.out",
       onUpdate: () => focusBlur.setAttribute("stdDeviation", blur.v.toFixed(2)) }}, "in")
+  // once resolved, drop the filter: a raster pass on a still mark buys
+  // nothing and keeps the letterforms fizzing.
+  .set("#focusWrap", {{ attr: {{ filter: "none" }} }}, "in+=1.35")
   .from(".golfLetter", {{ autoAlpha: 0, duration: 0.9, stagger: 0.06,
       ease: "sine.out" }}, "in+=0.55");
 
-// hold — let it sit
+// hold — nothing animates at all
 tl.addLabel("hold", 2.6).to({{}}, {{ duration: 1.4 }}, "hold");
 
 // out: one clean exhale, lining lingers a breath longer
 tl.addLabel("out", 4.0)
   .to("#wordmark", {{ autoAlpha: 0, scale: 1.012, duration: 0.9,
       ease: "sine.in" }}, "out")
-  .to("#liningDrift", {{ autoAlpha: 0, duration: 0.7, ease: "sine.in" }}, "out+=0.25");
+  .to("#lining", {{ autoAlpha: 0, duration: 0.7, ease: "sine.in" }}, "out+=0.25");
 
 tl.to({{}}, {{ duration: 0.05 }}, 5.0);
 
