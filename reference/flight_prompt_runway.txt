@@ -1,0 +1,20 @@
+=== RUNWAY PROMPT — 70s cel animation (full) ===
+
+1970s hand-drawn cel animation, like a vintage Saturday-morning cartoon or a found piece of 16mm animated film. Painted gouache backgrounds with soft visible brushstrokes; characters and objects are hand-inked cels with warm dark-brown outlines and slightly uneven paint fill. Faded Kodachrome color palette: cream, harvest gold, warm browns, avocado and olive greens, rust red. Heavy 16mm film grain, subtle gate weave, occasional dust specks, gentle cel jitter — the charm of analog animation.
+
+One continuous shot, no cuts. Starting from the input image: the camera rests at eye level with a single cream golf ball on a painted green. A hand-drawn vintage wooden golf club swings in once from the left and strikes the ball — exactly one ball, one clean strike. The ball launches skyward in one smooth hand-animated arc with classic cartoon easing and a brief smear-frame on takeoff.
+
+The camera drifts alongside the flying ball as a painted golf course rolls past below like a cartoon background pan: gouache fairways in layered greens, round brush-painted trees, a golden bunker, a still lake with painted highlights, a warm banded golden-hour sky behind. The ball stays a simple hand-inked circle, steady and clean.
+
+The ball descends onto a painted putting green, bounces twice with soft squash-and-stretch, rolls along the grass to a flagstick with a small rust-red flag, and drops into the hole with a satisfying settle. The camera eases in toward the hole and holds. And scene.
+
+Everything stays hand-drawn cel animation on painted backgrounds: no photorealism, no 3D rendering, no digital gradients, no modern motion graphics, no camera shake, no extra text, no extra balls, no people on screen.
+
+=== CONDENSED (if the prompt field truncates) ===
+
+1970s hand-drawn cel animation on painted gouache backgrounds, vintage Saturday-morning cartoon style, faded Kodachrome palette of cream, harvest gold, warm brown, olive green, rust red, heavy 16mm film grain and gentle cel jitter. One continuous shot, no cuts. From the input image, a hand-drawn wooden golf club swings in and strikes the ball once — exactly one ball. The ball launches in a smooth hand-animated arc; the camera drifts alongside as a painted golf course pans below: gouache fairways, brush-painted round trees, golden bunker, still lake, banded golden-hour sky. The ball descends onto a painted green, bounces twice with soft squash-and-stretch, rolls to a rust-red flag, and drops into the hole. Camera eases in and holds. Hand-drawn cel look throughout: no photorealism, no 3D, no digital gradients, no extra balls or text.
+
+=== SETTINGS ===
+- Input/start image: reference/flight_start.png (ideally the 70s repainted version)
+- Aspect: 16:9, Duration: 10s
+- Leave end keyframe empty (vector hole-reveal replaces the ending)
