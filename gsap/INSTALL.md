@@ -14,9 +14,15 @@ everything below applies to either file.
 
 ## What the embed does
 
-- Plays once, ~5 seconds.
+- Plays once, 4.7 seconds exactly.
 - Click anywhere skips to the end.
-- On finish it fades itself out and posts `bsg-intro-done` to the parent page.
+- Posts `bsg-intro-done` to the parent page on the same frame the wordmark
+  finishes fading, then hides itself. There is no empty-cream pause at the
+  end — the moment the mark is gone, it is the site's turn.
+
+Because the handoff is immediate, the parent's own fade is what the visitor
+reads as the transition into the site. Keep it short (300–500 ms); the intro
+has already done the settling.
 
 ## Paste into the site
 
@@ -50,7 +56,8 @@ everything below applies to either file.
     });
 
     // Safety net: never trap the visitor if the iframe fails to load.
-    setTimeout(dismiss, 9000);
+    // Normal completion arrives via the message at 4.7s.
+    setTimeout(dismiss, 8000);
   })();
 </script>
 ```
@@ -62,8 +69,8 @@ Notes:
 - `sessionStorage` shows the intro once per browser session. Use
   `localStorage` instead to show it once ever, or drop that block to play on
   every page load.
-- The 9-second timeout is a safety net only — normal completion arrives via
-  the `bsg-intro-done` message at ~5s.
+- The 8-second timeout is a safety net only — normal completion arrives via
+  the `bsg-intro-done` message at 4.7s.
 
 ## Changing the look
 

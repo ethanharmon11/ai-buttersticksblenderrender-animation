@@ -164,14 +164,14 @@ tl.addLabel("in", 0.55)
 // hold — nothing animates at all
 tl.addLabel("hold", 2.6).to({}, { duration: 1.4 }, "hold");
 
-// out: opacity only, lining lingers a breath longer. No scale on the way
-// out — moving the letterforms while they fade re-rasterizes their edges
-// every frame, which reads as the mark shaking just as it leaves.
+// out: opacity only, mark and lining together. No scale on the way out —
+// moving the letterforms while they fade re-rasterizes their edges every
+// frame, which reads as the mark shaking just as it leaves.
+// Nothing follows: the timeline ends on the last visible frame so the page
+// can take over immediately instead of sitting on an empty cream screen.
 tl.addLabel("out", 4.0)
-  .to("#wordmark", { autoAlpha: 0, duration: 0.9, ease: "sine.in" }, "out")
-  .to("#lining", { autoAlpha: 0, duration: 0.7, ease: "sine.in" }, "out+=0.25");
-
-tl.to({}, { duration: 0.05 }, 5.0);
+  .to(["#wordmark", "#lining"], { autoAlpha: 0, duration: 0.7,
+      ease: "sine.in" }, "out");
 
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   gsap.set("#wordmark", { scale: 1 });
@@ -186,9 +186,10 @@ if (seekParam !== null) {
 }
 document.body.addEventListener("click", () => tl.progress(1));  // click = skip
 tl.eventCallback("onComplete", () => {
+  // The mark has just finished fading, so the screen is already empty
+  // cream. Fading it again would only delay the site. Signal and vanish.
   try { parent.postMessage("bsg-intro-done", "*"); } catch (e) {}
-  gsap.to(document.body, { opacity: 0, duration: 0.5,
-    onComplete: () => { document.body.style.display = "none"; } });
+  document.body.style.display = "none";
 });
 window.introTimeline = tl;
 </script>
