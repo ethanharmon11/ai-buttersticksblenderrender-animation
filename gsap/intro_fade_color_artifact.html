@@ -165,10 +165,11 @@ tl.addLabel("in", 0.55)
 // hold — nothing animates at all
 tl.addLabel("hold", 2.6).to({}, { duration: 1.4 }, "hold");
 
-// out: one clean exhale, lining lingers a breath longer
+// out: opacity only, lining lingers a breath longer. No scale on the way
+// out — moving the letterforms while they fade re-rasterizes their edges
+// every frame, which reads as the mark shaking just as it leaves.
 tl.addLabel("out", 4.0)
-  .to("#wordmark", { autoAlpha: 0, scale: 1.012, duration: 0.9,
-      ease: "sine.in" }, "out")
+  .to("#wordmark", { autoAlpha: 0, duration: 0.9, ease: "sine.in" }, "out")
   .to("#lining", { autoAlpha: 0, duration: 0.7, ease: "sine.in" }, "out+=0.25");
 
 tl.to({}, { duration: 0.05 }, 5.0);
