@@ -8,6 +8,7 @@ shaft of light with BSG on its face, and the wordmark surfaces.
 Pure vector + GSAP. Builds gsap/intro_putt.html and the self-contained
 gsap/intro_putt_artifact.html. ?seek=<sec>, reduced-motion, click replay.
 """
+import base64
 import json
 import re
 from pathlib import Path
@@ -181,8 +182,33 @@ html = f"""<!doctype html>
       <g id="wmGolf">{paths("wm_golf", keep_fill=False, cls="golfLetter")}</g>
     </g>
   </g>
+
+  <!-- 70s film: living grain, warm vignette, frame edge — fixed overlay,
+       drawn above both acts so it never scales with the plunge -->
+  <defs>
+    <filter id="filmGrain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence id="grainNoise" type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7"/>
+      <feColorMatrix type="matrix"
+        values="0 0 0 0 0.30  0 0 0 0 0.22  0 0 0 0 0.12  0.75 0.75 0.75 0 0"/>
+    </filter>
+    <radialGradient id="vig" cx="0.5" cy="0.47" r="0.75">
+      <stop offset="0.6" stop-color="{HOLE_DARK}" stop-opacity="0"/>
+      <stop offset="1" stop-color="{HOLE_DARK}" stop-opacity="0.24"/>
+    </radialGradient>
+  </defs>
+  <g id="film" pointer-events="none">
+    <rect width="1600" height="900" filter="url(#filmGrain)" opacity="0.14"/>
+    <rect width="1600" height="900" fill="url(#vig)"/>
+    <rect x="10" y="10" width="1580" height="880" rx="24" fill="none"
+          stroke="{HOLE_DARK}" stroke-opacity="0.45" stroke-width="12"/>
+  </g>
 </svg>
 </div>
+
+<audio id="auAmb" src="audio/amb.mp3" preload="auto" loop></audio>
+<audio id="auPutt" src="audio/putt.mp3" preload="auto"></audio>
+<audio id="auRoll" src="audio/roll.mp3" preload="auto"></audio>
+<audio id="auCup" src="audio/cup.mp3" preload="auto"></audio>
 
 <script>{GSAP}</script>
 <script>
@@ -269,6 +295,47 @@ tl.addLabel("type", 7.0)
 // quiet hold
 tl.to({{}}, {{ duration: 0.1 }}, 9.6);
 
+// ---- sound: ambient bed + cues (autoplay-safe; unlocks on first gesture)
+const AU = {{
+  amb: document.getElementById("auAmb"),
+  putt: document.getElementById("auPutt"),
+  roll: document.getElementById("auRoll"),
+  cup: document.getElementById("auCup"),
+}};
+AU.amb.volume = 0.22; AU.putt.volume = 0.9;
+AU.roll.volume = 0.45; AU.cup.volume = 0.8;
+const tryPlay = (a) => {{ const p = a.play(); if (p) p.catch(() => {{}}); }};
+let audioUnlocked = false;
+const unlockAudio = () => {{
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  if (tl.progress() > 0 && tl.progress() < 1 && !tl.paused()) tryPlay(AU.amb);
+}};
+addEventListener("pointerdown", unlockAudio, {{ once: true }});
+addEventListener("keydown", unlockAudio, {{ once: true }});
+tl.call(() => tryPlay(AU.amb), null, "draw")
+  .call(() => tryPlay(AU.putt), null, "putt+=0.62")
+  .call(() => {{ AU.roll.volume = 0.45; tryPlay(AU.roll); }}, null, "roll")
+  .to(AU.roll, {{ volume: 0.02, duration: 1.7, ease: "power1.in" }}, "roll+=0.2")
+  .call(() => tryPlay(AU.cup), null, "roll+=1.84")
+  .to(AU.amb, {{ volume: 0.07, duration: 0.8, ease: "sine.in" }}, "plunge")
+  .call(() => {{ AU.cup.currentTime = 0; AU.cup.volume = 0.4;
+      AU.cup.playbackRate = 0.85; tryPlay(AU.cup); }}, null, "rest+=0.3");
+
+// ---- living 16mm: grain reseed + gentle gate weave
+const isSeeking = new URLSearchParams(location.search).get("seek") !== null;
+const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (!isSeeking && !prefersReduced) {{
+  const gn = document.getElementById("grainNoise");
+  setInterval(() => gn.setAttribute("seed", (Math.random() * 999) | 0), 100);
+  (function weave() {{
+    gsap.to(["#scene", "#inside"], {{
+      x: () => gsap.utils.random(-1.1, 1.1),
+      y: () => gsap.utils.random(-0.7, 0.7),
+      duration: 0.12, ease: "none", overwrite: false, onComplete: weave }});
+  }})();
+}}
+
 // reduced motion: land on the finished lockup
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {{
   tl.progress(1).pause();
@@ -291,9 +358,17 @@ window.introTimeline = tl;
 out = ROOT / "gsap" / "intro_putt.html"
 out.write_text(html, encoding="utf-8")
 
-m_title = re.search(r"<title>.*?</title>", html, re.S)
-m_style = re.search(r"<style>.*?</style>", html, re.S)
-m_body = re.search(r"<body>(.*)</body>", html, re.S)
+# artifact: inline the audio files so the page is fully self-contained
+art = html
+for _n in ("amb", "putt", "roll", "cup"):
+    _b64 = base64.b64encode(
+        (ROOT / "gsap" / "audio" / f"{_n}.mp3").read_bytes()).decode()
+    art = art.replace(f'src="audio/{_n}.mp3"',
+                      f'src="data:audio/mpeg;base64,{_b64}"')
+
+m_title = re.search(r"<title>.*?</title>", art, re.S)
+m_style = re.search(r"<style>.*?</style>", art, re.S)
+m_body = re.search(r"<body>(.*)</body>", art, re.S)
 (ROOT / "gsap" / "intro_putt_artifact.html").write_text(
     m_title.group(0) + "\n" + m_style.group(0) + m_body.group(1), encoding="utf-8")
 
