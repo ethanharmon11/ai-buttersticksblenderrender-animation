@@ -106,12 +106,67 @@ html = f"""<!doctype html>
         <stop offset="0.8" stop-color="{GOLDEN}" stop-opacity="0"/>
       </radialGradient>
     </defs>
+    <defs>
+      <radialGradient id="ballShade" cx="0.5" cy="0.34" r="0.85">
+        <stop offset="0" stop-color="#F4EAD3"/>
+        <stop offset="0.55" stop-color="{CREAM}"/>
+        <stop offset="1" stop-color="#D2BF98"/>
+      </radialGradient>
+      <clipPath id="ballFace"><circle cx="800" cy="470" r="145"/></clipPath>
+      <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="8"/>
+      </filter>
+    </defs>
     <polygon id="light" points="640,0 960,0 1120,900 480,900" fill="url(#beam)"/>
+    <!-- the hole floor -->
+    <ellipse cx="800" cy="648" rx="520" ry="64" fill="#33200E"/>
+    <ellipse id="ballShadow" cx="800" cy="636" rx="150" ry="24" fill="#1B1004" opacity="0.55" filter="url(#soft)"/>
     <g id="bigBall">
-      <circle cx="800" cy="470" r="150" fill="{CREAM}" stroke="{GREEN}" stroke-width="10"/>
-      <g fill="none" stroke="{GREEN}" stroke-width="5" stroke-linecap="round" opacity="0.5">
-        <path d="M713 388 q10 12 24 14 M770 366 q12 10 27 10 M846 372 q12 8 26 6"/>
-        <path d="M700 520 q12 10 26 10 M880 500 q12 8 25 5"/>
+      <circle cx="800" cy="470" r="150" fill="url(#ballShade)" stroke="{GREEN}" stroke-width="10"/>
+      <g clip-path="url(#ballFace)">
+        <g fill="#C4B28A">
+        <circle cx="749" cy="380" r="6.5" opacity="0.31"/>
+        <circle cx="783" cy="380" r="6.5" opacity="0.34"/>
+        <circle cx="817" cy="380" r="6.5" opacity="0.34"/>
+        <circle cx="851" cy="380" r="6.5" opacity="0.31"/>
+        <circle cx="732" cy="410" r="6.5" opacity="0.34"/>
+        <circle cx="766" cy="410" r="6.5" opacity="0.38"/>
+        <circle cx="800" cy="410" r="6.5" opacity="0.40"/>
+        <circle cx="834" cy="410" r="6.5" opacity="0.38"/>
+        <circle cx="868" cy="410" r="6.5" opacity="0.34"/>
+        <circle cx="715" cy="440" r="6.5" opacity="0.34"/>
+        <circle cx="749" cy="440" r="6.5" opacity="0.40"/>
+        <circle cx="783" cy="440" r="6.5" opacity="0.45"/>
+        <circle cx="817" cy="440" r="6.5" opacity="0.45"/>
+        <circle cx="851" cy="440" r="6.5" opacity="0.40"/>
+        <circle cx="885" cy="440" r="6.5" opacity="0.34"/>
+        <circle cx="698" cy="470" r="6.5" opacity="0.32"/>
+        <circle cx="732" cy="470" r="6.5" opacity="0.38"/>
+        <circle cx="766" cy="470" r="6.5" opacity="0.45"/>
+        <circle cx="800" cy="470" r="6.5" opacity="0.52"/>
+        <circle cx="834" cy="470" r="6.5" opacity="0.45"/>
+        <circle cx="868" cy="470" r="6.5" opacity="0.38"/>
+        <circle cx="902" cy="470" r="6.5" opacity="0.32"/>
+        <circle cx="715" cy="500" r="6.5" opacity="0.34"/>
+        <circle cx="749" cy="500" r="6.5" opacity="0.40"/>
+        <circle cx="783" cy="500" r="6.5" opacity="0.45"/>
+        <circle cx="817" cy="500" r="6.5" opacity="0.45"/>
+        <circle cx="851" cy="500" r="6.5" opacity="0.40"/>
+        <circle cx="885" cy="500" r="6.5" opacity="0.34"/>
+        <circle cx="732" cy="530" r="6.5" opacity="0.34"/>
+        <circle cx="766" cy="530" r="6.5" opacity="0.38"/>
+        <circle cx="800" cy="530" r="6.5" opacity="0.40"/>
+        <circle cx="834" cy="530" r="6.5" opacity="0.38"/>
+        <circle cx="868" cy="530" r="6.5" opacity="0.34"/>
+        <circle cx="749" cy="560" r="6.5" opacity="0.31"/>
+        <circle cx="783" cy="560" r="6.5" opacity="0.34"/>
+        <circle cx="817" cy="560" r="6.5" opacity="0.34"/>
+        <circle cx="851" cy="560" r="6.5" opacity="0.31"/>
+        </g>
+        <!-- underside shade -->
+        <ellipse cx="800" cy="560" rx="150" ry="88" fill="#4B311A" opacity="0.14" filter="url(#soft)"/>
+        <!-- beam catch on the crown -->
+        <ellipse cx="778" cy="360" rx="72" ry="30" fill="#FFF6DE" opacity="0.55" filter="url(#soft)" transform="rotate(-14 778 360)"/>
       </g>
       <g id="bsgFace" transform="translate({BSG_TX:.1f},{BSG_TY:.1f}) scale({BSG_S})">{paths("bsg")}</g>
     </g>
@@ -191,6 +246,8 @@ tl.addLabel("plunge", 4.5)
 // ---- at the bottom of the cup (5.5 - 7s)
 tl.addLabel("rest", 5.55)
   .to("#bigBall", {{ y: 0, duration: 0.75, ease: "bounce.out" }}, "rest")
+  .fromTo("#ballShadow", {{ scaleX: 0.35, opacity: 0, transformOrigin: "50% 50%" }},
+      {{ scaleX: 1, opacity: 0.55, duration: 0.5, ease: "power2.out", immediateRender: false }}, "rest+=0.3")
   .from("#light", {{ autoAlpha: 0, duration: 0.9, ease: "sine.out" }}, "rest+=0.1");
 
 // ---- the name surfaces (7.0 - 8.8s)
