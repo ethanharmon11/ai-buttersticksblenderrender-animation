@@ -160,9 +160,27 @@ tl.eventCallback("onComplete", () => {
 });""")
 (ROOT / "gsap" / "intro_fade_embed.html").write_text(embed, encoding="utf-8")
 
-m_title = re.search(r"<title>.*?</title>", html, re.S)
-m_style = re.search(r"<style>.*?</style>", html, re.S)
-m_body = re.search(r"<body>(.*)</body>", html, re.S)
+# shareable copy: same intro, plus a quiet replay hint once the mark exhales
+# (a shared link otherwise plays once and leaves an empty screen)
+art = html.replace("</style>", f"""  #replayHint {{
+    position: fixed; left: 0; right: 0; bottom: 7vh; text-align: center;
+    font: 500 11px/1 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    letter-spacing: 0.24em; text-transform: uppercase; color: {BROWN};
+    opacity: 0; pointer-events: none;
+  }}
+</style>""").replace(
+    """window.introTimeline = tl;""",
+    """const hint = document.createElement("div");
+hint.id = "replayHint";
+hint.textContent = "click to replay";
+document.body.appendChild(hint);
+tl.eventCallback("onComplete", () => gsap.to(hint, { opacity: 0.5, duration: 0.9 }));
+document.body.addEventListener("click", () => gsap.set(hint, { opacity: 0 }));
+window.introTimeline = tl;""")
+
+m_title = re.search(r"<title>.*?</title>", art, re.S)
+m_style = re.search(r"<style>.*?</style>", art, re.S)
+m_body = re.search(r"<body>(.*)</body>", art, re.S)
 (ROOT / "gsap" / "intro_fade_artifact.html").write_text(
     m_title.group(0) + "\n" + m_style.group(0) + m_body.group(1), encoding="utf-8")
 

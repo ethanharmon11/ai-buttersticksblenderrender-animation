@@ -3,6 +3,12 @@
   html, body { margin: 0; height: 100%; background: #EADDC1; overflow: hidden; }
   .stage { position: fixed; inset: 0; }
   svg { width: 100vw; height: 100vh; }
+  #replayHint {
+    position: fixed; left: 0; right: 0; bottom: 7vh; text-align: center;
+    font: 500 11px/1 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    letter-spacing: 0.24em; text-transform: uppercase; color: #8C5E2E;
+    opacity: 0; pointer-events: none;
+  }
 </style>
 <div class="stage">
 <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-label="Butter Sticks Golf">
@@ -144,5 +150,11 @@ if (seekParam !== null) {
   gsap.globalTimeline.pause();
 }
 document.body.addEventListener("click", () => tl.restart());
+const hint = document.createElement("div");
+hint.id = "replayHint";
+hint.textContent = "click to replay";
+document.body.appendChild(hint);
+tl.eventCallback("onComplete", () => gsap.to(hint, { opacity: 0.5, duration: 0.9 }));
+document.body.addEventListener("click", () => gsap.set(hint, { opacity: 0 }));
 window.introTimeline = tl;
 </script>
